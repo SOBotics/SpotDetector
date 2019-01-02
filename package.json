@@ -1,0 +1,34 @@
+{
+  "name": "spotdetector",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf dist/ && babel src/ --out-dir dist/",
+    "dev": "babel-node src/index.js",
+    "start": "node dist/index.js",
+    "deploy": "gcloud app deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chatexchange": "^0.2.3-dev",
+    "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.1.0",
+    "lodash": "^4.17.11",
+    "node-cron": "^2.0.3",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^3.0.0",
+    "sqlite3": "^4.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "rimraf": "^2.6.2"
+  }
+}
