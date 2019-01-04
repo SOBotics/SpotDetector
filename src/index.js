@@ -215,13 +215,13 @@ const main = async () => {
   cron.schedule(
     "0 3 * * 5",
     async () => {
-      const report = await generateReport(db, 7, 3);
+      const report = await generateReport(db, 8, 4);
       await room.sendMessage(
-        `@SamuelLiew [ [SpotDetector](https://stackapps.com/questions/8091) ] Your [7 day report](${
+        `[ [SpotDetector](https://stackapps.com/questions/8091) ] @SamuelLiew Your [8 day report](${
           report.url
         }) has arrived. ${report.users} user${
           report.users === 1 ? "" : "s"
-        } found matching 3 or more possible bad reviews.`
+        } found matching 4 or more possible bad reviews.`
       );
     },
     {
