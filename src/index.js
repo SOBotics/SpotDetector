@@ -1,4 +1,3 @@
-import fetchSentinel from "./fetchSentinel";
 import dbInit from "./db";
 import Browser from "./Browser";
 import ReviewFetcher from "./ReviewFetcher";
