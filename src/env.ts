@@ -9,6 +9,22 @@ export interface BotEnvironment {
     TENK_PASSWORD: string;
 }
 
+/**
+ * @summary checks if all env vars are present
+ * @param env bot environment variables
+ */
+export const validateEnv = (env: Partial<BotEnvironment>): env is BotEnvironment => {
+    const requiredEnv: Array<keyof BotEnvironment> = [
+        "TENK_EMAIL",
+        "TENK_PASSWORD",
+        "CHAT_EMAIL",
+        "CHAT_PASSWORD",
+        "CHAT_ROOM"
+    ];
+
+    return !requiredEnv.find((key) => !env[key]);
+};
+
 const { parsed } = dotenv.config();
 
 const environment: Partial<BotEnvironment> = parsed || {};
