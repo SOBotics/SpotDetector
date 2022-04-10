@@ -5,8 +5,8 @@ import request from "request-promise-native";
 import Browser from "./Browser";
 import dbInit from "./db";
 import env from "./env";
-import PostFetcher from "./PostFetcher";
-import ReviewFetcher from "./ReviewFetcher";
+import PostFetcher from "./fetchers/posts";
+import ReviewFetcher from "./fetchers/reviews";
 import { delay } from "./utils";
 
 const generateReport = async (db, days, reviews) => {

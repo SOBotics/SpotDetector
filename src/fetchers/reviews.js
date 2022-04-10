@@ -1,4 +1,4 @@
-import { delay } from './utils';
+import { delay } from '../utils';
 import { SQL } from 'sql-template-strings';
 
 export default class PostFetcher {
@@ -36,16 +36,16 @@ export default class PostFetcher {
             }
 
             console.log(`Scraping page ${page} of ${reviewType} queue`);
-            
+
             const html = await this._browser.scrapeHtml(`/review/${reviewType}/history?page=${page}`);
             const rows = html('.history-table tr').toArray();
-    
+
             for (let row of rows) {
                 row = html(row);
                 const userA = row.find('td').eq(0).find('a');
                 const userId = userA.attr('href').split('/')[2];
                 const userName = userA.text();
-    
+
                 const postHref = row.find('td').eq(1).find('a').attr('href');
                 const split = postHref.split('#');
                 let postId;
@@ -58,15 +58,15 @@ export default class PostFetcher {
                     postId = parseInt(postHref.split('/')[2], 10);
                     postType = 'question';
                 }
-    
+
                 const reviewA = row.find('td').eq(2).find('a');
                 const reviewId = reviewA.attr('href').split('/')[3];
                 const reviewAction = reviewA.text().trim();
-    
+
                 const dateA = row.find('td').eq(3).find('span');
                 const dateString = dateA.attr('title');
                 const dateInt = new Date(dateString).getTime() / 1000;
-    
+
                 try {
                     await this._db.run(SQL`
                         INSERT OR IGNORE INTO posts (id, type) VALUES (
@@ -74,7 +74,7 @@ export default class PostFetcher {
                             ${postType}
                         )
                     `);
-                    
+
                     await this._db.run(SQL`
                         INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
                             ${reviewId},
