@@ -1,3 +1,4 @@
+import type { Post, Wrappers } from "@userscripters/stackexchange-api-types";
 import { chunk as arrayChunk } from "lodash";
 import request from "request-promise-native";
 import { SQL } from "sql-template-strings";
@@ -11,28 +12,24 @@ const STALE_DELETION = 3 * 24 * 60 * 60;
 
 export default class PostFetcher extends Fetcher {
 
-    #backoff = 0;
-
     /**
-     * Perform an update on the posts provided, updating them to deleted/undeleted
-     *
-     * @param {number[]} postIds The post ids to update/search
-     * @param {boolean} updateNonDeleted True to update posts as "Non Deleted" - Prevent them from being searched/updated again
-     * @returns
-     * @memberof PostFetcher
+     * @summary Perform an update on the posts provided, updating them to deleted/undeleted
+     * @param postIds The post ids to update/search
      */
-    async _fetchDeleted(postIds) {
-        if (postIds.length === 0) {
+    async #fetchDeleted(postIds: number[]) {
+        const key = env?.API_KEY;
+
+        if (postIds.length === 0 || !key) {
             return [];
         }
 
         const idsSemi = postIds.join(";");
 
-        const res = await request({
-            uri: `https://api.stackexchange.com/2.2/posts/${idsSemi}`,
+        const res: Wrappers.CommonWrapperObject<Post> = await request({
+            uri: `https://api.stackexchange.com/2.3/posts/${idsSemi}`,
             qs: {
                 pagesize: 100,
-                key: env.API_KEY,
+                key,
                 site: "stackoverflow",
                 filter: "!3tz1Wb9MFaV.ubMHe"
             },
@@ -60,7 +57,7 @@ export default class PostFetcher extends Fetcher {
         while (true) {
             try {
                 //datetime(date, 'unixepoch') >= datetime('now','-3 days') AND
-                const rows = await this._db.all(`
+                const rows = await this.db.all(`
           SELECT p.*, r.date
           FROM posts p
           LEFT JOIN reviews r ON p.id = r.post_id
@@ -75,13 +72,13 @@ export default class PostFetcher extends Fetcher {
                 console.log(`Checking ${rows.length} posts for deletions`);
 
                 for (const chunk of arrayChunk(rows, 100)) {
-                    const deleted = await this._fetchDeleted(chunk.map(r => r.id));
+                    const deleted = await this.#fetchDeleted(chunk.map(r => r.id));
 
                     for (const row of chunk) {
                         if (!deleted.includes(row.id)) {
                             if (row.date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await this._db.run(SQL`
+                                await this.db.run(SQL`
                   UPDATE posts
                   SET deleted = 0, delete_reason = NULL
                   WHERE id = ${row.id}
@@ -92,7 +89,7 @@ export default class PostFetcher extends Fetcher {
                         }
 
                         console.log(`Scraping timeline for ${row.id}`);
-                        const html = await this._browser.scrapeHtml(
+                        const html = await this.browser.scrapeHTML(
                             `/posts/${row.id}/timeline`
                         );
 
@@ -102,7 +99,7 @@ export default class PostFetcher extends Fetcher {
                         if (!timeline.deleted) {
                             if (row.date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await this._db.run(SQL`
+                                await this.db.run(SQL`
                   UPDATE posts
                   SET deleted = 0, delete_reason = NULL
                   WHERE id = ${row.id}
@@ -113,7 +110,7 @@ export default class PostFetcher extends Fetcher {
                             continue;
                         }
 
-                        await this._db.run(SQL`
+                        await this.db.run(SQL`
                             UPDATE posts
                             SET deleted = 1, delete_reason = ${timeline.deleteReason ||
                             null}
