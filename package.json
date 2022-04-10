@@ -24,6 +24,7 @@
     "sqlite": "^4.0.25"
   },
   "devDependencies": {
+    "@types/jsdom": "^16.2.14",
     "@types/lodash": "^4.14.181",
     "@types/node-cron": "^3.0.1",
     "@types/request-promise-native": "^1.0.18",
