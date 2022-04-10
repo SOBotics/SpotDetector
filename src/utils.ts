@@ -16,3 +16,13 @@ export const isErrno = (err: unknown): err is NodeJS.ErrnoException => err insta
  * @param label label to provide
  */
 export const mdURL = (url: string, label: string) => `[${label}](${url})`;
+
+/**
+ * @summary safely matches a string against a regular expression
+ * @param expr regular expression to match against
+ * @param text text to match
+ */
+export const safeMatch = (expr: RegExp, text: string) => {
+    const [, ...groups] = expr.exec(text) || [];
+    return groups;
+};
