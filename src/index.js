@@ -1,15 +1,13 @@
-import dbInit from "./db";
-import Browser from "./Browser";
-import ReviewFetcher from "./ReviewFetcher";
-import PostFetcher from "./PostFetcher";
 import Client from "chatexchange";
-import { delay } from "./utils";
-import env from "./env";
-import Message from "chatexchange/dist/Message";
-import request from "request-promise-native";
-import { SQL } from "sql-template-strings";
 import cron from "node-cron";
 import os from "os";
+import request from "request-promise-native";
+import Browser from "./Browser";
+import dbInit from "./db";
+import env from "./env";
+import PostFetcher from "./PostFetcher";
+import ReviewFetcher from "./ReviewFetcher";
+import { delay } from "./utils";
 
 const generateReport = async (db, days, reviews) => {
   const rows = await db.all(`

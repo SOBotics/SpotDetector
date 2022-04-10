@@ -1,10 +1,8 @@
+import { chunk as arrayChunk } from "lodash";
 import request from "request-promise-native";
-import { delay } from "./utils";
-import fs from "fs";
-import cheerio from "cheerio";
 import { SQL } from "sql-template-strings";
 import env from "./env";
-import { chunk as arrayChunk } from "lodash";
+import { delay } from "./utils";
 
 const DUPLICATE_REGEX = /meta\.stackexchange\.com\/q\/104227/i;
 const TIMELINE_DELAY = 1500;
