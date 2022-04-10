@@ -1,11 +1,8 @@
-import { delay } from '../utils';
 import { SQL } from 'sql-template-strings';
+import { delay } from '../utils';
+import Fetcher from './index.js';
 
-export default class PostFetcher {
-    constructor(db, browser) {
-        this._db = db;
-        this._browser = browser;
-    }
+export default class PostFetcher extends Fetcher {
 
     async _scrapeReviews(reviewType) {
         let page = 0;
