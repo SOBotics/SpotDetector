@@ -1,39 +1,52 @@
 {
-  "name": "spotdetector",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "rimraf dist/ && tsc",
-    "dev": "ts-node src/index.ts",
-    "start": "node dist/index.js",
-    "deploy": "gcloud app deploy",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "chatexchange": "^0.6.1",
-    "dotenv": "^16.0.0",
-    "jsdom": "^19.0.0",
-    "lodash": "^4.17.21",
-    "node-cron": "^3.0.0",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
-    "sql-template-strings": "^2.2.2",
-    "sqlite": "^4.0.25",
-    "sqlite3": "^5.0.2"
-  },
-  "devDependencies": {
-    "@types/jsdom": "^16.2.14",
-    "@types/lodash": "^4.14.181",
-    "@types/node": "^17.0.23",
-    "@types/node-cron": "^3.0.1",
-    "@types/request-promise-native": "^1.0.18",
-    "@userscripters/stackexchange-api-types": "^3.4.0",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.7.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.3"
-  }
+    "name": "spotdetector",
+    "version": "1.0.0",
+    "description": "Spot Detector — a bot designed to seek out and provide feedback about potentially bad reviews",
+    "main": "index.js",
+    "scripts": {
+        "build": "rimraf dist/ && tsc",
+        "dev": "ts-node src/index.ts",
+        "start": "node dist/index.js",
+        "deploy": "gcloud app deploy",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "Daniel Beaupre",
+        "url": "https://github.com/danbopes"
+    },
+    "contributors": [
+        {
+            "name": "Oleg Valter",
+            "url": "https://stackoverflow.com/users/11407695"
+        },
+        {
+            "name": "Samuel Liew",
+            "url": "https://so-user.com/584192?tab=profile"
+        }
+    ],
+    "license": "GPL-3.0-or-later",
+    "dependencies": {
+        "chatexchange": "^0.6.1",
+        "dotenv": "^16.0.0",
+        "jsdom": "^19.0.0",
+        "lodash": "^4.17.21",
+        "node-cron": "^3.0.0",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.5",
+        "sql-template-strings": "^2.2.2",
+        "sqlite": "^4.0.25",
+        "sqlite3": "^5.0.2"
+    },
+    "devDependencies": {
+        "@types/jsdom": "^16.2.14",
+        "@types/lodash": "^4.14.181",
+        "@types/node": "^17.0.23",
+        "@types/node-cron": "^3.0.1",
+        "@types/request-promise-native": "^1.0.18",
+        "@userscripters/stackexchange-api-types": "^3.4.0",
+        "rimraf": "^3.0.2",
+        "ts-node": "^10.7.0",
+        "tslib": "^2.3.1",
+        "typescript": "^4.6.3"
+    }
 }
