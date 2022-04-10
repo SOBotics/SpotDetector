@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "esModuleInterop": true,
+        "importHelpers": true,
+        "declaration": false,
+        "lib": ["ESNext"],
+        "module": "ES2022",
+        "moduleResolution": "node",
+        "outDir": "dist"
+    },
+    "include": ["src"],
+    "exclude": ["dist"]
+}
