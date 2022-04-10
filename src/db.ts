@@ -1,12 +1,17 @@
 import sqlite from "sqlite";
+import sqlite3 from "sqlite3";
 
-export default async () => {
-  const db = await sqlite.open("./posts.db", {
-    mode: sqlite.OPEN_CREATE,
-    verbose: true
-  });
+/**
+ * @summary initializes the database
+ */
+export const initialize = async () => {
+    const db = await sqlite.open({
+        driver: sqlite3.verbose().Database,
+        filename: "./posts.db",
+        mode: sqlite3.OPEN_CREATE
+    });
 
-  await db.exec(`
+    await db.exec(`
         CREATE TABLE IF NOT EXISTS posts (
             id	INTEGER NOT NULL,
             type	TEXT NOT NULL,
@@ -15,7 +20,7 @@ export default async () => {
             PRIMARY KEY(id)
         );`);
 
-  await db.exec(`
+    await db.exec(`
         CREATE TABLE IF NOT EXISTS reviews (
             review_id	INTEGER NOT NULL,
             review_type	TEXT NOT NULL,
@@ -29,24 +34,26 @@ export default async () => {
         );
     `);
 
-  await db.exec(`
+    await db.exec(`
         CREATE INDEX IF NOT EXISTS idx_post_id ON reviews (
             post_id	ASC
         );
     `);
 
-  await db.exec(`
+    await db.exec(`
         CREATE INDEX IF NOT EXISTS idx_post_deleted_review_result ON reviews (
             post_deleted	ASC,
             review_result	ASC
         );
     `);
 
-  await db.exec(`
+    await db.exec(`
         CREATE INDEX IF NOT EXISTS idx_post_deleted ON posts (
             deleted	ASC
         ) WHERE deleted IS NULL;
     `);
 
-  return db;
+    return db;
 };
+
+export default initialize;
