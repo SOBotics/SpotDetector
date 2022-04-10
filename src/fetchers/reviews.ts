@@ -1,14 +1,27 @@
 import { SQL } from 'sql-template-strings';
-import { delay } from '../utils';
+import { delay, isErrno } from '../utils';
 import Fetcher from './index.js';
+
+/// <reference types="node" />
+
+export enum ReviewType {
+    CV = "close-votes",
+    RV = "reopen-votes",
+    LQA = "low-quality-answers",
+    SE = "suggested-edits",
+    FA = "first-answers",
+    FQ = "first-questions",
+    LA = "late-answers",
+    T = "triage"
+}
 
 export default class PostFetcher extends Fetcher {
 
-    async _scrapeReviews(reviewType) {
+    async #scrape(reviewType: ReviewType) {
         let page = 0;
         let reviewCount = 0;
 
-        let latestReview = await this._db.get(SQL`
+        let latestReview = await this.db.get(SQL`
             SELECT review_id, user_id
             FROM reviews
             WHERE review_type = ${reviewType}
@@ -34,16 +47,22 @@ export default class PostFetcher extends Fetcher {
 
             console.log(`Scraping page ${page} of ${reviewType} queue`);
 
-            const html = await this._browser.scrapeHtml(`/review/${reviewType}/history?page=${page}`);
-            const rows = html('.history-table tr').toArray();
+            const d = await this.browser.scrapeHTML(`/review/${reviewType}/history?page=${page}`);
+            const rows = d.querySelectorAll<HTMLTableRowElement>('.history-table tr');
 
             for (let row of rows) {
-                row = html(row);
-                const userA = row.find('td').eq(0).find('a');
-                const userId = userA.attr('href').split('/')[2];
-                const userName = userA.text();
+                const { cells } = row;
 
-                const postHref = row.find('td').eq(1).find('a').attr('href');
+                const userA = cells[0].querySelector("a");
+                const postA = cells[1].querySelector("a");
+                const reviewA = cells[2].querySelector("a");
+                const dateA = cells[3].querySelector("span");
+                if (!userA || !postA || !reviewA || !dateA) continue;
+
+                const userId = userA.href.split('/')[2];
+                const userName = userA.textContent;
+
+                const postHref = postA.href;
                 const split = postHref.split('#');
                 let postId;
                 let postType;
@@ -56,23 +75,21 @@ export default class PostFetcher extends Fetcher {
                     postType = 'question';
                 }
 
-                const reviewA = row.find('td').eq(2).find('a');
-                const reviewId = reviewA.attr('href').split('/')[3];
-                const reviewAction = reviewA.text().trim();
+                const reviewId = reviewA.href.split('/')[3];
+                const reviewAction = reviewA.textContent?.trim();
 
-                const dateA = row.find('td').eq(3).find('span');
-                const dateString = dateA.attr('title');
+                const dateString = dateA.title;
                 const dateInt = new Date(dateString).getTime() / 1000;
 
                 try {
-                    await this._db.run(SQL`
+                    await this.db.run(SQL`
                         INSERT OR IGNORE INTO posts (id, type) VALUES (
                             ${postId},
                             ${postType}
                         )
                     `);
 
-                    await this._db.run(SQL`
+                    await this.db.run(SQL`
                         INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
                             ${reviewId},
                             ${reviewType},
@@ -84,7 +101,7 @@ export default class PostFetcher extends Fetcher {
                         )
                     `);
                 } catch (err) {
-                    if (err.code !== 'SQLITE_CONSTRAINT') {
+                    if (isErrno(err) && err.code !== 'SQLITE_CONSTRAINT') {
                         throw err;
                     }
                 }
@@ -104,9 +121,10 @@ export default class PostFetcher extends Fetcher {
     async scrape() {
         while (true) {
             console.log('Starting Review Scrape');
-            const countLA = await this._scrapeReviews('late-answers');
-            const countFP = await this._scrapeReviews('first-posts');
-            const countLQP = await this._scrapeReviews('low-quality-posts');
+            // TODO: make dynamic
+            const countLA = await this.#scrape(ReviewType.LA);
+            const countFP = await this.#scrape(ReviewType.FA);
+            const countLQP = await this.#scrape(ReviewType.LQA);
             console.log(`Scrape finished! Got ${countLA} new late-answers, ${countFP} new first-posts, and ${countLQP} new low-quality-posts.`);
             await delay(30 * 60 * 1000);
         }
