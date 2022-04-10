@@ -8,4 +8,6 @@ export default abstract class Fetcher {
      * @param db {@link Database} instance for SQLite operations
      */
     constructor(protected browser: Browser, protected db: Database) { }
+
+    abstract scrape(): Promise<void>;
 }
