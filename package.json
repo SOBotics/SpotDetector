@@ -32,7 +32,7 @@
         "lodash": "^4.17.21",
         "node-cron": "^3.0.0",
         "request": "^2.88.0",
-        "request-promise-native": "^1.0.5",
+        "request-promise-native": "^1.0.9",
         "sql-template-strings": "^2.2.2",
         "sqlite": "^4.0.25",
         "sqlite3": "^5.0.2"
