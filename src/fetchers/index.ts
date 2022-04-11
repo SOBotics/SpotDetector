@@ -1,5 +1,5 @@
 import type { Database } from "sqlite";
-import type Browser from "../Browser.js";
+import type Browser from "../browser.js";
 
 export default abstract class Fetcher {
     /**

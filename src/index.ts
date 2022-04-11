@@ -2,13 +2,13 @@ import Client, { ChatEventType } from "chatexchange";
 import WebsocketEvent from "chatexchange/dist/WebsocketEvent";
 import cron from "node-cron";
 import os from "os";
-import Browser from "./Browser";
-import dbInit from "./db";
-import env, { BotEnvironment, validateEnv } from "./env";
-import PostFetcher from "./fetchers/posts";
-import ReviewFetcher from "./fetchers/reviews";
+import Browser from "./browser.js";
+import dbInit from "./db.js";
+import env, { BotEnvironment, validateEnv } from "./env.js";
+import PostFetcher from "./fetchers/posts.js";
+import ReviewFetcher from "./fetchers/reviews.js";
 import generate from "./reports/index.js";
-import { delay, mdURL, safeMatch } from "./utils";
+import { delay, mdURL, safeMatch } from "./utils.js";
 
 const main = async () => {
     const valid = validateEnv(env);

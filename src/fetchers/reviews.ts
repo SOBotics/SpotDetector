@@ -1,5 +1,5 @@
 import { SQL } from 'sql-template-strings';
-import { delay, isErrno } from '../utils';
+import { delay, isErrno } from '../utils.js';
 import Fetcher from './index.js';
 
 /// <reference types="node" />

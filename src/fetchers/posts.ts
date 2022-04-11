@@ -2,9 +2,9 @@ import type { Post, Wrappers } from "@userscripters/stackexchange-api-types";
 import { chunk as arrayChunk } from "lodash";
 import request from "request-promise-native";
 import { SQL } from "sql-template-strings";
-import env from "../env";
+import env from "../env.js";
 import { parseTimeline } from "../parsers/timeline.js";
-import { delay } from "../utils";
+import { delay } from "../utils.js";
 import Fetcher from "./index.js";
 
 const TIMELINE_DELAY = 1500;

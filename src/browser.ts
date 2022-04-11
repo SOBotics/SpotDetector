@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import type { RequestAPI, RequiredUriUrl } from "request";
 import request, { RequestPromiseOptions, type RequestPromise } from 'request-promise-native';
-import { delay } from './utils';
+import { delay } from './utils.js';
 
 type Host = "https://stackoverflow.com";
 
