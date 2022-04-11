@@ -8,6 +8,7 @@
         "esModuleInterop": true,
         "importHelpers": true,
         "declaration": false,
+        "skipLibCheck": true,
         "lib": ["ESNext", "DOM.Iterable"],
         "module": "ES2022",
         "moduleResolution": "node",
