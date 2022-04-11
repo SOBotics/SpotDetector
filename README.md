@@ -4,6 +4,8 @@
 
 # About
 
+[![build](https://github.com/SOBotics/SpotDetector/actions/workflows/nodejs.yml/badge.svg)](https://github.com/SOBotics/SpotDetector/actions/workflows/nodejs.yml)
+
 A bot designed to seek out and provide feedback about potentially bad reviews.
 
 # Check it out
