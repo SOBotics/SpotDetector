@@ -1,5 +1,5 @@
 import type { Post, Wrappers } from "@userscripters/stackexchange-api-types";
-import { chunk as arrayChunk } from "lodash";
+import lodash from "lodash";
 import request from "request-promise-native";
 import { SQL } from "sql-template-strings";
 import env from "../env.js";
@@ -76,7 +76,7 @@ export default class PostFetcher extends Fetcher {
 
                 console.log(`Checking ${rows.length} posts for deletions`);
 
-                for (const chunk of arrayChunk(rows, 100)) {
+                for (const chunk of lodash.chunk(rows, 100)) {
                     const deleted = await this.#fetchDeleted(chunk.map(r => r.id));
 
                     for (const row of chunk) {
