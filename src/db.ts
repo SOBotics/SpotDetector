@@ -59,6 +59,25 @@ export const initialize = async () => {
 };
 
 /**
+ * @summary adds a post into the database
+ * @param db database instance
+ * @param id id of the post
+ * @param type type of the post
+ */
+export const addPost = (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+    id: number,
+    type: "question" | "answer"
+) => {
+    return db.run(SQL`
+        INSERT OR IGNORE INTO posts (id, type) VALUES (
+            ${id},
+            ${type}
+        )
+    `);
+};
+
+/**
  * @summary gets latest review from the database by type
  * @param db database instance
  * @param reviewType type of the review

@@ -1,5 +1,5 @@
 import { SQL } from 'sql-template-strings';
-import { getLatestReview } from '../db.js';
+import { addPost, getLatestReview } from '../db.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher from './index.js';
 
@@ -60,7 +60,7 @@ export default class ReviewFetcher extends Fetcher {
                 const postHref = postA.href;
                 const split = postHref.split('#');
                 let postId;
-                let postType;
+                let postType: "answer" | "question";
 
                 if (split.length > 1) {
                     postId = parseInt(split[1], 10);
@@ -77,12 +77,7 @@ export default class ReviewFetcher extends Fetcher {
                 const dateInt = new Date(dateString).getTime() / 1000;
 
                 try {
-                    await this.db.run(SQL`
-                        INSERT OR IGNORE INTO posts (id, type) VALUES (
-                            ${postId},
-                            ${postType}
-                        )
-                    `);
+                    await addPost(this.db, postId, postType);
 
                     await this.db.run(SQL`
                         INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
