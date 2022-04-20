@@ -1,3 +1,5 @@
+import { PostType } from "./fetchers/posts.js";
+
 /**
  * @summary delays execution for a time
  * @param ms milliseconds to delay for
@@ -25,4 +27,19 @@ export const mdURL = (url: string, label: string) => `[${label}](${url})`;
 export const safeMatch = (expr: RegExp, text: string) => {
     const [, ...groups] = expr.exec(text) || [];
     return groups;
+};
+
+/**
+ * @summary parses post metadata from a link
+ * @param href post link
+ */
+export const getPostMetadataFromLink = (href: string): [id: number, type: PostType] => {
+    const split = href.split('#');
+
+    const isAnswer = split.length > 1;
+
+    return [
+        parseInt(isAnswer ? split[1] : safeMatch(/q(?:uestions)?\/(\d+)/, href)[0], 10),
+        isAnswer ? PostType.A : PostType.Q
+    ];
 };
