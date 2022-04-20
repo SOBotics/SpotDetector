@@ -1,19 +1,21 @@
 const DUPLICATE_REGEX = /meta\.stackexchange\.com\/q\/104227/i;
 
+interface PostTimeline {
+    deleted: boolean | null,
+    deletedBy: string[],
+    deleteReason: string,
+    reviews: Record<string, {
+        eventid: string,
+        link: string,
+        result?: string,
+        type: string;
+    }>;
+}
+
 export const parseTimeline = (doc: Document) => {
     const rows = [...doc.querySelectorAll<HTMLTableRowElement>(".event-rows tr:not(.separator)")];
 
-    const init: {
-        deleted: unknown | null,
-        deletedBy: string[],
-        deleteReason: string,
-        reviews: Record<string, {
-            eventid: string,
-            link: string,
-            result?: string,
-            type: string;
-        }>;
-    } = {
+    const init: PostTimeline = {
         deleted: null,
         deletedBy: [],
         deleteReason: "",
