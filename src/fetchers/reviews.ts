@@ -16,21 +16,21 @@ export enum ReviewType {
     T = "triage"
 }
 
-export default class PostFetcher extends Fetcher {
+export interface Review {
+    review_id: string | null;
+    user_id: string | null;
+}
+
+export default class ReviewFetcher extends Fetcher {
 
     async #scrape(reviewType: ReviewType) {
         let page = 0;
         let reviewCount = 0;
 
-        let latestReview = await getLatestReview(this.db, reviewType);
-
-        if (typeof latestReview === 'undefined') {
-            latestReview = {
-                review_id: null,
-                user_id: null,
-            };
-        }
-
+        const latestReview: Review = await getLatestReview(this.db, reviewType) || {
+            review_id: null,
+            user_id: null,
+        };
 
         while (true) {
             page++;
