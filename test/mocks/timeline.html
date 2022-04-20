@@ -1,0 +1,1204 @@
+<html class="html__responsive" lang="en"
+    ><head>
+        <title
+            >Timeline for Why is processing a sorted array faster than
+            processing an unsorted array? - Stack Overflow</title
+        >
+        <link
+            rel="shortcut icon"
+            href="https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico?v=ec617d715196"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon.png?v=c78bd457575a"
+        />
+        <link
+            rel="image_src"
+            href="https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon.png?v=c78bd457575a"
+        />
+        <link
+            rel="search"
+            type="application/opensearchdescription+xml"
+            title="Stack Overflow"
+            href="/opensearch.xml"
+        />
+        <meta name="referrer" content="origin" />
+        <meta
+            name="viewport"
+            content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://stackoverflow.com/posts/11227809/timeline"
+        />
+        <meta property="og:site_name" content="Stack Overflow" />
+        <meta
+            property="og:image"
+            itemprop="image primaryImageOfPage"
+            content="https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon@2.png?v=73d79a89bded"
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:domain" content="stackoverflow.com" />
+        <meta
+            name="twitter:title"
+            property="og:title"
+            itemprop="name"
+            content="Timeline for Why is processing a sorted array faster than processing an unsorted array?"
+        />
+        <meta
+            name="twitter:description"
+            property="og:description"
+            itemprop="description"
+            content="Stack Overflow | The World’s Largest Online Community for Developers"
+        />
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.sstatic.net/Shared/stacks.css?v=b56cf48c9205"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.sstatic.net/Sites/stackoverflow/primary.css?v=9f3012e164b7"
+        />
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.sstatic.net/Sites/stackoverflow/secondary.css?v=dab6781814d9"
+        />
+
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.sstatic.net/Shared/Channels/channels.css?v=f039f0b977b7"
+        />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="/teams/theme.css?v=:10063:1628160300:28523:1628506067:85437:0"
+        />
+
+        <noscript id="noscript-css"
+            ><style>
+                body,
+                .s-topbar {
+                    margin-top: 1.9em;
+                }
+            </style></noscript
+        >
+        <style type="text/css">
+            .keyboard-console {
+                background-color: black;
+                background-color: rgba(0, 0, 0, 0.8);
+                position: fixed;
+                left: 100px;
+                bottom: 100px;
+                padding: 10px;
+                text-align: left;
+                border-radius: 6px;
+                z-index: 1000;
+            }
+            .keyboard-console pre {
+                background-color: transparent;
+                color: #ccc;
+                width: auto;
+                height: auto;
+                padding: 0;
+                margin: 0;
+                overflow: visible;
+                line-height: 1.5;
+                border: none;
+            }
+            .keyboard-console pre b,
+            .keyboard-console pre a {
+                color: white !important;
+            }
+            .keyboard-console pre kbd {
+                display: inline-block;
+                font-family: monospace;
+            }
+            .keyboard-selected {
+                box-shadow: 15px 15px 50px rgba(0, 0, 0, 0.2) inset;
+            }
+        </style></head
+    >
+    <body
+        class="unified-theme theme-dark col1-page timeline-page"
+        data-new-gr-c-s-check-loaded="14.1057.0"
+        data-gr-ext-installed=""
+    >
+        <div id="notify-container"></div>
+        <div id="custom-header"></div>
+
+        <div class="container">
+            <div
+                id="left-sidebar"
+                data-is-here-when="md lg"
+                class="left-sidebar js-pinned-left-sidebar ps-relative"
+            >
+                <div class="left-sidebar--sticky-container js-sticky-leftnav">
+                    <nav role="navigation">
+                        <ol class="nav-links">
+                            <li class="ps-relative">
+                                <a
+                                    href="/"
+                                    class="pl8 js-gps-track nav-links--link"
+                                    data-gps-track="top_nav.click({is_current:false, location:10, destination:8})"
+                                    aria-controls=""
+                                    data-controller=""
+                                    data-s-popover-placement="right"
+                                    data-s-popover-auto-show="true"
+                                    data-s-popover-hide-on-outside-click="never"
+                                >
+                                    <div class="d-flex ai-center">
+                                        <div class="flex--item truncate">
+                                            Home
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li>
+                                <ol class="nav-links">
+                                    <li
+                                        class="fs-fine tt-uppercase ml8 mt16 mb4 fc-light"
+                                        >Public</li
+                                    >
+
+                                    <li class="ps-relative">
+                                        <a
+                                            id="nav-questions"
+                                            href="/questions"
+                                            class="pl8 js-gps-track nav-links--link -link__with-icon"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:1})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <svg
+                                                aria-hidden="true"
+                                                class="svg-icon iconGlobe"
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 18 18"
+                                            >
+                                                <path
+                                                    d="M9 1C4.64 1 1 4.64 1 9c0 4.36 3.64 8 8 8 4.36 0 8-3.64 8-8 0-4.36-3.64-8-8-8ZM8 15.32a6.46 6.46 0 0 1-4.3-2.74 6.46 6.46 0 0 1-.93-5.01L7 11.68v.8c0 .88.12 1.32 1 1.32v1.52Zm5.72-2c-.2-.66-1-1.32-1.72-1.32h-1v-2c0-.44-.56-1-1-1H6V7h1c.44 0 1-.56 1-1V5h2c.88 0 1.4-.72 1.4-1.6v-.33a6.45 6.45 0 0 1 3.83 4.51 6.45 6.45 0 0 1-1.51 5.73v.01Z"
+                                                ></path>
+                                            </svg>
+                                            <span class="-link--channel-name"
+                                                >Questions</span
+                                            >
+                                        </a>
+                                    </li>
+
+                                    <li class="ps-relative">
+                                        <a
+                                            id="nav-tags"
+                                            href="/tags"
+                                            class="js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:2})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item truncate"
+                                                >
+                                                    Tags
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li class="ps-relative">
+                                        <a
+                                            id="nav-users"
+                                            href="/users"
+                                            class="js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:3})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item truncate"
+                                                >
+                                                    Users
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li class="ps-relative">
+                                        <a
+                                            id="nav-companies"
+                                            href="https://stackoverflow.com/jobs/companies?so_medium=stackoverflow&amp;so_source=SiteNav"
+                                            class="js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:12})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item truncate"
+                                                >
+                                                    Companies
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="d-flex ml8 mt16 mb4 jc-space-between"
+                                    >
+                                        <div
+                                            class="flex--item tt-uppercase tt-uppercase fs-fine fc-light"
+                                            >Collectives</div
+                                        >
+                                        <div
+                                            class="flex--item fs-fine fc-light"
+                                        >
+                                            <a
+                                                href="javascript:void(0)"
+                                                class="s-link s-link__inherit mr8 js-gps-track"
+                                                role="button"
+                                                aria-controls="popover-discover-collectives"
+                                                data-controller="s-popover"
+                                                data-action="s-popover#toggle"
+                                                data-s-popover-placement="top"
+                                                data-s-popover-toggle-class="is-selected"
+                                                data-gps-track="top_nav.click({is_current:false, location:10, destination:17})"
+                                            >
+                                                <svg
+                                                    aria-hidden="true"
+                                                    class="svg-icon iconInfoSm"
+                                                    width="14"
+                                                    height="14"
+                                                    viewBox="0 0 14 14"
+                                                >
+                                                    <path
+                                                        d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1Zm1 10V6H6v5h2Zm0-6V3H6v2h2Z"
+                                                    ></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li class="ps-relative">
+                                        <a
+                                            id="nav-subCommunity-google-cloud"
+                                            href="/collectives/google-cloud"
+                                            class="pl8 js-gps-track nav-links--link -link__with-icon"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:17})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div
+                                                class="themed subcommunity-avatar subcommunity-google-cloud s-avatar s-avatar__16 va-text-bottom mr6"
+                                            ></div>
+                                            <span class="-link--channel-name"
+                                                >Google Cloud</span
+                                            >
+                                        </a>
+                                    </li>
+                                </ol>
+                            </li>
+
+                            <li>
+                                <ol class="nav-links">
+                                    <li
+                                        class="fs-fine tt-uppercase ml8 mt24 mb4 fc-light"
+                                    >
+                                        Teams
+                                        <a
+                                            href="https://stackoverflow.com/teams/create/free?utm_source=so-owned&amp;utm_medium=side-bar&amp;utm_campaign=campaign-38&amp;utm_content=cta"
+                                            title="Create free Team"
+                                            class="float-right mr4 pr4 js-gps-track"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:10})"
+                                            data-ga='["teams traffic","left nav cta","stackoverflow.com/teams",null,null]'
+                                        >
+                                            <svg
+                                                aria-hidden="true"
+                                                class="fc-light mtn2 svg-icon iconPlusSm"
+                                                width="14"
+                                                height="14"
+                                                viewBox="0 0 14 14"
+                                            >
+                                                <path
+                                                    d="M8 2H6v4H2v2h4v4h2V8h4V6H8V2Z"
+                                                ></path>
+                                            </svg>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="ps-relative js-team-nav-link"
+                                        data-team-id="10063"
+                                    >
+                                        <a
+                                            href="/c/sobotics/"
+                                            class="pl8 js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:1});teams.sidebar_team_homepage.click({team_id:10063, new_activity:false})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item ps-relative"
+                                                >
+                                                    <div
+                                                        class="site10063 themed s-avatar themed-avatar__sm va-text-bottom"
+                                                        role="img"
+                                                        aria-label="Small channel avatar"
+                                                        ><div
+                                                            class="s-avatar--letter"
+                                                            >S</div
+                                                        ><svg
+                                                            aria-hidden="true"
+                                                            class="native s-avatar--badge svg-icon iconShieldXSm"
+                                                            width="9"
+                                                            height="10"
+                                                            viewBox="0 0 9 10"
+                                                        >
+                                                            <path
+                                                                d="M0 1.84 4.5 0 9 1.84v3.17C9 7.53 6.3 10 4.5 10 2.7 10 0 7.53 0 5.01V1.84Z"
+                                                                fill="var(--white)"
+                                                            ></path>
+                                                            <path
+                                                                d="M1 2.5 4.5 1 8 2.5v2.51C8 7.34 5.34 9 4.5 9 3.65 9 1 7.34 1 5.01V2.5Zm2.98 3.02L3.2 7h2.6l-.78-1.48a.4.4 0 0 1 .15-.38c.34-.24.73-.7.73-1.14 0-.71-.5-1.23-1.41-1.23-.92 0-1.39.52-1.39 1.23 0 .44.4.9.73 1.14.12.08.18.23.15.38Z"
+                                                                fill="var(--black-500)"
+                                                            ></path></svg
+                                                    ></div>
+                                                </div>
+                                                <div
+                                                    class="flex--item pl6 truncate"
+                                                >
+                                                    SOBotics
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="ps-relative js-team-nav-link"
+                                        data-team-id="28523"
+                                    >
+                                        <a
+                                            href="/c/userscripters/"
+                                            class="pl8 js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:1});teams.sidebar_team_homepage.click({team_id:28523, new_activity:false})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item ps-relative"
+                                                >
+                                                    <div
+                                                        class="site28523 themed s-avatar themed-avatar__sm va-text-bottom"
+                                                        role="img"
+                                                        aria-label="Small channel avatar"
+                                                        ><div
+                                                            class="s-avatar--letter"
+                                                            >U</div
+                                                        ><svg
+                                                            aria-hidden="true"
+                                                            class="native s-avatar--badge svg-icon iconShieldXSm"
+                                                            width="9"
+                                                            height="10"
+                                                            viewBox="0 0 9 10"
+                                                        >
+                                                            <path
+                                                                d="M0 1.84 4.5 0 9 1.84v3.17C9 7.53 6.3 10 4.5 10 2.7 10 0 7.53 0 5.01V1.84Z"
+                                                                fill="var(--white)"
+                                                            ></path>
+                                                            <path
+                                                                d="M1 2.5 4.5 1 8 2.5v2.51C8 7.34 5.34 9 4.5 9 3.65 9 1 7.34 1 5.01V2.5Zm2.98 3.02L3.2 7h2.6l-.78-1.48a.4.4 0 0 1 .15-.38c.34-.24.73-.7.73-1.14 0-.71-.5-1.23-1.41-1.23-.92 0-1.39.52-1.39 1.23 0 .44.4.9.73 1.14.12.08.18.23.15.38Z"
+                                                                fill="var(--black-500)"
+                                                            ></path></svg
+                                                    ></div>
+                                                </div>
+                                                <div
+                                                    class="flex--item pl6 truncate"
+                                                >
+                                                    UserScripters
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li
+                                        class="ps-relative js-team-nav-link"
+                                        data-team-id="85437"
+                                    >
+                                        <a
+                                            href="/c/writing-collaboration/"
+                                            class="pl8 js-gps-track nav-links--link"
+                                            data-gps-track="top_nav.click({is_current:false, location:10, destination:1});teams.sidebar_team_homepage.click({team_id:85437, new_activity:false})"
+                                            aria-controls=""
+                                            data-controller=""
+                                            data-s-popover-placement="right"
+                                            data-s-popover-auto-show="true"
+                                            data-s-popover-hide-on-outside-click="never"
+                                        >
+                                            <div class="d-flex ai-center">
+                                                <div
+                                                    class="flex--item ps-relative"
+                                                >
+                                                    <div
+                                                        class="site85437 themed s-avatar themed-avatar__sm va-text-bottom"
+                                                        role="img"
+                                                        aria-label="Small channel avatar"
+                                                        ><div
+                                                            class="s-avatar--letter"
+                                                            >W</div
+                                                        ><svg
+                                                            aria-hidden="true"
+                                                            class="native s-avatar--badge svg-icon iconShieldXSm"
+                                                            width="9"
+                                                            height="10"
+                                                            viewBox="0 0 9 10"
+                                                        >
+                                                            <path
+                                                                d="M0 1.84 4.5 0 9 1.84v3.17C9 7.53 6.3 10 4.5 10 2.7 10 0 7.53 0 5.01V1.84Z"
+                                                                fill="var(--white)"
+                                                            ></path>
+                                                            <path
+                                                                d="M1 2.5 4.5 1 8 2.5v2.51C8 7.34 5.34 9 4.5 9 3.65 9 1 7.34 1 5.01V2.5Zm2.98 3.02L3.2 7h2.6l-.78-1.48a.4.4 0 0 1 .15-.38c.34-.24.73-.7.73-1.14 0-.71-.5-1.23-1.41-1.23-.92 0-1.39.52-1.39 1.23 0 .44.4.9.73 1.14.12.08.18.23.15.38Z"
+                                                                fill="var(--black-500)"
+                                                            ></path></svg
+                                                    ></div>
+                                                </div>
+                                                <div
+                                                    class="flex--item pl6 truncate"
+                                                >
+                                                    Writing Collaboration
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div
+                    class="s-popover ws2"
+                    id="popover-discover-collectives"
+                    role="menu"
+                    aria-hidden="true"
+                >
+                    <div class="s-popover--arrow"></div>
+                    <div>
+                        <svg
+                            aria-hidden="true"
+                            class="fc-orange-500 float-right ml24 svg-spot spotCollective"
+                            width="48"
+                            height="48"
+                            viewBox="0 0 48 48"
+                        >
+                            <path
+                                d="M25.5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM14 18.25c0-.69.56-1.25 1.25-1.25h22.5c.69 0 1.25.56 1.25 1.25V37.5a1 1 0 0 1-1.6.8l-4.07-3.05a1.25 1.25 0 0 0-.75-.25H15.25c-.69 0-1.25-.56-1.25-1.25v-15.5ZM7 24.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM25.5 48a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM48 24.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
+                                opacity=".2"
+                            ></path>
+                            <path
+                                d="M21 3.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0ZM24.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM0 23.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0ZM3.5 22a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM21 44.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0Zm3.5-1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm20-23a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM43 23.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm-23.23-3.14a1 1 0 0 1-.13 1.4l-2.08 1.74 2.08 1.73a1 1 0 1 1-1.28 1.54l-2.42-2.02a1.63 1.63 0 0 1 0-2.5l2.42-2.02a1 1 0 0 1 1.4.13Zm7.59 1.41a1 1 0 1 1 1.28-1.54l2.42 2.02c.78.65.78 1.85 0 2.5l-2.42 2.02a1 1 0 1 1-1.28-1.54l2.08-1.73-2.08-1.73ZM24.12 18a1 1 0 0 1 .87 1.12l-1 8a1 1 0 1 1-1.98-.24l1-8a1 1 0 0 1 1.11-.87Zm-11.87-5C11.01 13 10 14 10 15.25v15.5c0 1.24 1 2.25 2.25 2.25h17.33c.06 0 .11.02.15.05l4.07 3.05a2 2 0 0 0 3.2-1.6V15.25c0-1.24-1-2.25-2.25-2.25h-22.5ZM12 15.25c0-.14.11-.25.25-.25h22.5c.14 0 .25.11.25.25V34.5l-4.07-3.05a2.2 2.2 0 0 0-1.35-.45H12.25a.25.25 0 0 1-.25-.25v-15.5Zm7.24-10.68a1 1 0 1 0-.48-1.94A22.04 22.04 0 0 0 2.91 17.7a1 1 0 1 0 1.92.58 20.04 20.04 0 0 1 14.4-13.72Zm11.05-1.66a1 1 0 0 0-.58 1.92c6.45 1.92 11.54 7 13.46 13.46a1 1 0 1 0 1.92-.58 22.05 22.05 0 0 0-14.8-14.8ZM4.57 28.76a1 1 0 0 0-1.94.48 22.03 22.03 0 0 0 16.13 16.13 1 1 0 1 0 .48-1.94A20.03 20.03 0 0 1 4.57 28.76Zm40.8.48a1 1 0 1 0-1.94-.48 20.04 20.04 0 0 1-13.72 14.41 1 1 0 0 0 .58 1.92 22.04 22.04 0 0 0 15.08-15.85Z"
+                            ></path>
+                        </svg>
+                        <div class="pt4 fw-bold"
+                            >Collectives on Stack Overflow</div
+                        >
+                        <p class="my16 fs-caption fc-medium"
+                            >Find centralized, trusted content and collaborate
+                            around the technologies you use most.</p
+                        >
+                        <a
+                            href="/collectives"
+                            class="js-gps-track s-btn s-btn__primary s-btn__xs"
+                            data-gps-track="top_nav.click({is_current:false, location:10, destination:18})"
+                        >
+                            Learn more
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    class="s-popover"
+                    id="popover-teams-create-cta"
+                    role="menu"
+                    aria-hidden="true"
+                >
+                    <div class="s-popover--arrow"></div>
+
+                    <div class="ps-relative overflow-hidden">
+                        <p class="mb2"><strong>Teams</strong></p>
+                        <p class="mb12 fs-caption fc-black-400"
+                            >Q&amp;A for work</p
+                        >
+                        <p class="mb12 fs-caption fc-medium"
+                            >Connect and share knowledge within a single
+                            location that is structured and easy to search.</p
+                        >
+                        <a
+                            href="https://stackoverflow.co/teams"
+                            class="js-gps-track s-btn s-btn__primary s-btn__xs"
+                            data-gps-track="teams.create.left-sidenav.click({ Action: CtaClick })"
+                            data-ga='["teams left navigation","left nav cta","stackoverflow.com/teams",null,null]'
+                        >
+                            Learn more
+                        </a>
+                    </div>
+
+                    <div class="ps-absolute t8 r8">
+                        <svg
+                            aria-hidden="true"
+                            class="fc-orange-500 svg-spot spotPeople"
+                            width="48"
+                            height="48"
+                            viewBox="0 0 48 48"
+                        >
+                            <path
+                                d="M13.5 28a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM7 30a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v5h11v-5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H33v5a1 1 0 0 1-1 1H20a1 1 0 0 1-1-1v-5H8a1 1 0 0 1-1-1V30Zm25-6.5a4.5 4.5 0 1 0 9 0 4.5 4.5 0 0 0-9 0ZM24.5 34a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z"
+                                opacity=".2"
+                            ></path>
+                            <path
+                                d="M16.4 26.08A6 6 0 1 0 7.53 26C5.64 26.06 4 27.52 4 29.45V40a1 1 0 0 0 1 1h9a1 1 0 1 0 0-2h-4v-7a1 1 0 1 0-2 0v7H6v-9.55c0-.73.67-1.45 1.64-1.45H16a1 1 0 0 0 .4-1.92ZM12 18a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm16.47 14a6 6 0 1 0-8.94 0A3.6 3.6 0 0 0 16 35.5V46a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V35.5c0-1.94-1.64-3.42-3.53-3.5ZM20 28a4 4 0 1 1 8 0 4 4 0 0 1-8 0Zm-.3 6h8.6c1 0 1.7.75 1.7 1.5V45h-2v-7a1 1 0 1 0-2 0v7h-4v-7a1 1 0 1 0-2 0v7h-2v-9.5c0-.75.7-1.5 1.7-1.5ZM42 22c0 1.54-.58 2.94-1.53 4A3.5 3.5 0 0 1 44 29.45V40a1 1 0 0 1-1 1h-9a1 1 0 1 1 0-2h4v-7a1 1 0 1 1 2 0v7h2v-9.55A1.5 1.5 0 0 0 40.48 28H32a1 1 0 0 1-.4-1.92A6 6 0 1 1 42 22Zm-2 0a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z"
+                            ></path>
+                            <g opacity=".35">
+                                <path
+                                    d="M17 10a1 1 0 011-1h12a1 1 0 110 2H18a1 1 0 01-1-1Zm1-5a1 1 0 100 2h12a1 1 0 100-2H18ZM14 1a1 1 0 00-1 1v12a1 1 0 001 1h5.09l4.2 4.2a1 1 0 001.46-.04l3.7-4.16H34a1 1 0 001-1V2a1 1 0 00-1-1H14Zm1 12V3h18v10h-5a1 1 0 00-.75.34l-3.3 3.7-3.74-3.75a1 1 0 00-.71-.29H15Z"
+                                ></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content" class="snippet-hidden">
+                <div class="mainbar-full post-timeline-v2">
+                    <div class="subheader mb16 d-flex fd-column h-auto">
+                        <h1 class="flex--item">
+                            Timeline for
+                            <a
+                                href="/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array"
+                                class="question-hyperlink"
+                                >Why is processing a sorted array faster than
+                                processing an unsorted array?</a
+                            >
+                        </h1>
+                        <h3 class="flex--item">
+                            Current License:
+                            <a
+                                href="https://creativecommons.org/licenses/by-sa/4.0/"
+                                target="_blank"
+                            >
+                                CC BY-SA 4.0</a
+                            >
+                        </h3>
+                    </div>
+
+                    <fieldset class="mb16 clear-both">
+                        <legend class="s-label fs-body2">Event filters</legend>
+                        <div class="s-btn-group mt16">
+                            <a
+                                class="s-btn s-btn__muted s-btn__outlined is-selected"
+                                href="?filter=NoVoteDetail"
+                            >
+                                Hide vote summaries
+                            </a>
+                            <a
+                                class="s-btn s-btn__muted s-btn__outlined"
+                                href="?filter=WithVoteSummaries"
+                            >
+                                Show vote summaries
+                            </a>
+                        </div>
+                    </fieldset>
+
+                    <div class="mb16 fw-bold fs-body2"> 238 events </div>
+
+                    <table class="post-timeline s-table s-table__bx">
+                        <thead>
+                            <tr>
+                                <th>
+                                    when
+                                    <a class="js-toggle-date-format">
+                                        toggle format
+                                    </a>
+                                </th>
+                                <th class="event-type">what</th>
+                                <th></th>
+                                <th>by</th>
+                                <th>license</th>
+                                <th>comment</th>
+                            </tr>
+                        </thead>
+                        <tbody class="event-rows fs-body">
+                            <tr
+                                class="datehash-931640161"
+                                data-datehash="931640161"
+                                data-eventtype="history"
+                                data-eventid="19b36662-0868-482b-8003-a343df307059"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_19b36662-0868-482b-8003-a343df307059"
+                                        ><span
+                                            title="2022-04-17 05:15:11Z"
+                                            class="relativetime"
+                                            >Apr 17 at 5:15</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> closed </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/754119/alon-eitan"
+                                            >Alon Eitan</a
+                                        ><br /><a
+                                            href="/users/248567/kirk-beard"
+                                            >Kirk Beard</a
+                                        ><br /><a href="/users/8895292/sos"
+                                            >SOS</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> Needs more focus </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash-249957053"
+                                data-datehash="249957053"
+                                data-eventtype="history"
+                                data-eventid="08f0b4fb-e601-4ae1-a047-c4f3c8d1009a"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_08f0b4fb-e601-4ae1-a047-c4f3c8d1009a"
+                                        ><span
+                                            title="2022-04-17 04:44:57Z"
+                                            class="relativetime"
+                                            >Apr 17 at 4:44</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span>
+                                        <a
+                                            class="expander-arrow-small-hide js-load-revision"
+                                            data-revision-guid="08f0b4fb-e601-4ae1-a047-c4f3c8d1009a"
+                                        ></a>
+                                        edited
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="/users/18832402/sam"
+                                            class="comment-user owner"
+                                            >Sam</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="https://creativecommons.org/licenses/by-sa/4.0/"
+                                            target="_blank"
+                                            title="CC License version used for this revision"
+                                            >CC BY-SA 4.0</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span>
+                                        <div
+                                            class="d-inline-flex ai-center fw-wrap"
+                                        >
+                                            <span
+                                                class="revision-comment ml0 flex--item"
+                                            >
+                                                deleted 7 characters in body
+                                            </span>
+                                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash-1420246604"
+                                data-datehash="1420246604"
+                                data-eventtype="history"
+                                data-eventid="95fed5a2-e027-45ea-9640-8f2fcb0ffe7a"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_95fed5a2-e027-45ea-9640-8f2fcb0ffe7a"
+                                        ><span
+                                            title="2022-04-17 04:40:12Z"
+                                            class="relativetime"
+                                            >Apr 17 at 4:40</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> undeleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash-2012173059"
+                                data-datehash="2012173059"
+                                data-eventtype="history"
+                                data-eventid="213d6d11-e6ee-4451-bce1-03c55c1ddfa0"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_213d6d11-e6ee-4451-bce1-03c55c1ddfa0"
+                                        ><span
+                                            title="2022-04-17 03:36:45Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:36</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> deleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> via Vote </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash-2131510547"
+                                data-datehash="2131510547"
+                                data-eventtype="history"
+                                data-eventid="4a0d3a75-336a-4bf7-8032-f19f46ef550d"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_4a0d3a75-336a-4bf7-8032-f19f46ef550d"
+                                        ><span
+                                            title="2022-04-17 03:36:33Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:36</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span>
+                                        <a
+                                            class="expander-arrow-small-hide js-load-revision"
+                                            data-revision-guid="4a0d3a75-336a-4bf7-8032-f19f46ef550d"
+                                        ></a>
+                                        edited
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="/users/18832402/sam"
+                                            class="comment-user owner"
+                                            >Sam</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="https://creativecommons.org/licenses/by-sa/4.0/"
+                                            target="_blank"
+                                            title="CC License version used for this revision"
+                                            >CC BY-SA 4.0</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span>
+                                        <div
+                                            class="d-inline-flex ai-center fw-wrap"
+                                        >
+                                            <span
+                                                class="revision-comment ml0 flex--item"
+                                            >
+                                                added 10 characters in body
+                                            </span>
+                                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash-1858427795"
+                                data-datehash="1858427795"
+                                data-eventtype="history"
+                                data-eventid="c35f38c3-eb1e-4daf-a8a6-9c1722f844cb"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_c35f38c3-eb1e-4daf-a8a6-9c1722f844cb"
+                                        ><span
+                                            title="2022-04-17 03:36:03Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:36</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> undeleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash--1501660558"
+                                data-datehash="-1501660558"
+                                data-eventtype="history"
+                                data-eventid="32ad22ca-b813-4d8f-867d-23b566473610"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_32ad22ca-b813-4d8f-867d-23b566473610"
+                                        ><span
+                                            title="2022-04-17 03:30:55Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:30</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> deleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> via Vote </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash--1371387214"
+                                data-datehash="-1371387214"
+                                data-eventtype="history"
+                                data-eventid="8bd000b2-556b-4a26-9311-036b135f4437"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_8bd000b2-556b-4a26-9311-036b135f4437"
+                                        ><span
+                                            title="2022-04-17 03:30:42Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:30</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> undeleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash--1782588398"
+                                data-datehash="-1782588398"
+                                data-eventtype="history"
+                                data-eventid="c4a1bb85-f42f-4e34-9b2e-db181bbb69c8"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <a
+                                        href="#history_c4a1bb85-f42f-4e34-9b2e-db181bbb69c8"
+                                        ><span
+                                            title="2022-04-17 03:30:26Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:30</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> deleted </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a href="/users/18832402/sam">Sam</a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> via Vote </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash--1634407278 deleted-event simultaneous"
+                                data-datehash="-1634407278"
+                                data-eventtype="review"
+                                data-eventid="31554291"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <span
+                                        class="simultaneous-symbol"
+                                        title="simultaneous dates"
+                                        ><span>S</span></span
+                                    >
+
+                                    <a href="#review_31554291"
+                                        ><span
+                                            title="2022-04-17 03:30:14Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:30</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type review"
+                                        >review</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span>
+                                        <a
+                                            href="/review/first-questions/31554291"
+                                        >
+                                            First questions
+                                        </a>
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span> </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> </span>
+                                </td>
+                            </tr>
+                            <tr
+                                class="datehash--1292980494"
+                                data-datehash="-1292980494"
+                                data-eventtype="review"
+                                data-eventid="31554291"
+                            >
+                                <td
+                                    class="ws-nowrap creation-date btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                >
+                                    <a href="#review_31554291"
+                                        ><span
+                                            title="2022-04-17 03:31:15Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:31</span
+                                        ></a
+                                    >
+                                </td>
+                                <td
+                                    class="ws-nowrap event-type btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                >
+                                </td>
+                                <td
+                                    class="wmn1 btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                >
+                                    <span> invalidated </span>
+                                </td>
+                                <td
+                                    class="ws-nowrap btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                >
+                                    <span> </span>
+                                </td>
+                                <td
+                                    class="btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                ></td>
+                                <td
+                                    class="event-comment btw0 pt0 fc-red-400 bg-red-050 lh-xs"
+                                >
+                                    <span> </span>
+                                </td>
+                            </tr>
+
+                            <tr
+                                class="datehash--1634407278 simultaneous"
+                                data-datehash="-1634407278"
+                                data-eventtype="history"
+                                data-eventid="73c56884-e14d-46dd-a1f4-d3e82616400d"
+                            >
+                                <td class="ws-nowrap creation-date">
+                                    <span
+                                        class="simultaneous-symbol"
+                                        title="simultaneous dates"
+                                        ><span>S</span></span
+                                    >
+
+                                    <a
+                                        href="#history_73c56884-e14d-46dd-a1f4-d3e82616400d"
+                                        ><span
+                                            title="2022-04-17 03:30:14Z"
+                                            class="relativetime"
+                                            >Apr 17 at 3:30</span
+                                        ></a
+                                    >
+                                </td>
+                                <td class="ws-nowrap event-type">
+                                    <span class="event-type history"
+                                        >history</span
+                                    >
+                                </td>
+                                <td class="wmn1">
+                                    <span> asked </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="/users/18832402/sam"
+                                            class="comment-user owner"
+                                            >Sam</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="ws-nowrap">
+                                    <span>
+                                        <a
+                                            href="https://creativecommons.org/licenses/by-sa/4.0/"
+                                            target="_blank"
+                                            title="CC License version used for this revision"
+                                            >CC BY-SA 4.0</a
+                                        >
+                                    </span>
+                                </td>
+                                <td class="event-comment">
+                                    <span> </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt8 ml4">
+                        <a class="js-toggle-date-format"> toggle format </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body></html
+>
