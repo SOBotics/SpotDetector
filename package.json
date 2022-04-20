@@ -25,7 +25,7 @@
             "url": "https://so-user.com/584192?tab=profile"
         }
     ],
-    "license": "GPL-3.0-or-later",
+    "license": "GPL-3.0-only",
     "dependencies": {
         "chatexchange": "^0.6.1",
         "dotenv": "^16.0.0",

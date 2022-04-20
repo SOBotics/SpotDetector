@@ -25,4 +25,4 @@ You can find it currently active in the [SOBotics Room](https://chat.stackoverfl
 
 # License
 
-All code is licensed under [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html) license.
+All code is licensed under [GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html) license.
