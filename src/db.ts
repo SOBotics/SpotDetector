@@ -1,6 +1,7 @@
 import SQL from "sql-template-strings";
 import sqlite from "sqlite";
 import sqlite3 from "sqlite3";
+import { PostType } from "./fetchers/posts.js";
 import type { ReviewType } from "./fetchers/reviews.js";
 
 /**
@@ -67,7 +68,7 @@ export const initialize = async () => {
 export const addPost = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
     id: number,
-    type: "question" | "answer"
+    type: PostType
 ) => {
     return db.run(SQL`
         INSERT OR IGNORE INTO posts (id, type) VALUES (

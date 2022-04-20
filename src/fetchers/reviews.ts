@@ -1,6 +1,7 @@
 import { addPost, addReview, getLatestReview } from '../db.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher from './index.js';
+import { PostType } from './posts.js';
 
 /// <reference types="node" />
 
@@ -59,14 +60,14 @@ export default class ReviewFetcher extends Fetcher {
                 const postHref = postA.href;
                 const split = postHref.split('#');
                 let postId;
-                let postType: "answer" | "question";
+                let postType: PostType;
 
                 if (split.length > 1) {
                     postId = parseInt(split[1], 10);
-                    postType = 'answer';
+                    postType = PostType.A;
                 } else {
                     postId = parseInt(postHref.split('/')[2], 10);
-                    postType = 'question';
+                    postType = PostType.Q;
                 }
 
                 const reviewId = reviewA.href.split('/')[3];
