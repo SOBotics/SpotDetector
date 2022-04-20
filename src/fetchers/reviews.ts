@@ -1,4 +1,5 @@
 import { SQL } from 'sql-template-strings';
+import { getLatestReview } from '../db.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher from './index.js';
 
@@ -21,13 +22,7 @@ export default class PostFetcher extends Fetcher {
         let page = 0;
         let reviewCount = 0;
 
-        let latestReview = await this.db.get(SQL`
-            SELECT review_id, user_id
-            FROM reviews
-            WHERE review_type = ${reviewType}
-            ORDER BY date DESC
-            LIMIT 1
-        `);
+        let latestReview = await getLatestReview(this.db, reviewType);
 
         if (typeof latestReview === 'undefined') {
             latestReview = {

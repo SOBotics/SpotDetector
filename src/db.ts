@@ -1,5 +1,7 @@
+import SQL from "sql-template-strings";
 import sqlite from "sqlite";
 import sqlite3 from "sqlite3";
+import type { ReviewType } from "./fetchers/reviews.js";
 
 /**
  * @summary initializes the database
@@ -54,6 +56,24 @@ export const initialize = async () => {
     `);
 
     return db;
+};
+
+/**
+ * @summary gets latest review from the database by type
+ * @param db database instance
+ * @param reviewType type of the review
+ */
+export const getLatestReview = (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+    reviewType: ReviewType
+) => {
+    return db.get(SQL`
+            SELECT review_id, user_id
+            FROM reviews
+            WHERE review_type = ${reviewType}
+            ORDER BY date DESC
+            LIMIT 1
+        `);
 };
 
 export default initialize;
