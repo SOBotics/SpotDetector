@@ -1,5 +1,4 @@
-import { SQL } from 'sql-template-strings';
-import { addPost, getLatestReview } from '../db.js';
+import { addPost, addReview, getLatestReview } from '../db.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher from './index.js';
 
@@ -55,7 +54,7 @@ export default class ReviewFetcher extends Fetcher {
                 if (!userA || !postA || !reviewA || !dateA) continue;
 
                 const userId = userA.href.split('/')[2];
-                const userName = userA.textContent;
+                const userName = userA.textContent || "";
 
                 const postHref = postA.href;
                 const split = postHref.split('#');
@@ -71,7 +70,7 @@ export default class ReviewFetcher extends Fetcher {
                 }
 
                 const reviewId = reviewA.href.split('/')[3];
-                const reviewAction = reviewA.textContent?.trim();
+                const reviewAction = reviewA.textContent?.trim() || "";
 
                 const dateString = dateA.title;
                 const dateInt = new Date(dateString).getTime() / 1000;
@@ -79,17 +78,13 @@ export default class ReviewFetcher extends Fetcher {
                 try {
                     await addPost(this.db, postId, postType);
 
-                    await this.db.run(SQL`
-                        INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
-                            ${reviewId},
-                            ${reviewType},
-                            ${userId},
-                            ${userName},
-                            ${postId},
-                            ${dateInt},
-                            ${reviewAction}
-                        )
-                    `);
+                    await addReview(this.db, reviewId, reviewType, {
+                        userId,
+                        userName,
+                        postId,
+                        dateInt,
+                        reviewAction
+                    });
                 } catch (err) {
                     if (isErrno(err) && err.code !== 'SQLITE_CONSTRAINT') {
                         throw err;

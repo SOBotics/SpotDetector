@@ -78,6 +78,40 @@ export const addPost = (
 };
 
 /**
+ * @summary adds a review into the database
+ * @param db database instance
+ * @param id id of the review
+ * @param type type of the review
+ * @param init review information
+ */
+export const addReview = (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+    id: string,
+    type: ReviewType,
+    init: {
+        userId: string,
+        userName: string,
+        postId: number,
+        dateInt: number,
+        reviewAction: string;
+    }
+) => {
+    const { userId, userName, postId, dateInt, reviewAction } = init;
+
+    return db.run(SQL`
+        INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
+            ${id},
+            ${type},
+            ${userId},
+            ${userName},
+            ${postId},
+            ${dateInt},
+            ${reviewAction}
+        )
+    `);
+};
+
+/**
  * @summary gets latest review from the database by type
  * @param db database instance
  * @param reviewType type of the review
