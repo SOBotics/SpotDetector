@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Spot Detector — a bot designed to seek out and provide feedback about potentially bad reviews",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "build": "rimraf dist/ && tsc",
         "dev": "ts-node src/index.ts",

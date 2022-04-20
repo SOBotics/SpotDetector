@@ -7,5 +7,8 @@
     ],
     "spec": [
         "test/**/*.spec.*"
+    ],
+    "loader": [
+        "ts-node/esm"
     ]
 }
