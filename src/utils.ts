@@ -43,3 +43,10 @@ export const getPostMetadataFromLink = (href: string): [id: number, type: PostTy
         isAnswer ? PostType.A : PostType.Q
     ];
 };
+
+/**
+ * @summary type-guard version of {@link Array.prototype.includes}
+ * @param arr array to check
+ * @param elem element to find
+ */
+export const includes = <T>(arr: T[], elem: unknown): elem is T => arr.some((x) => x === elem);
