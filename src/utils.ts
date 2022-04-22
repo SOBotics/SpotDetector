@@ -50,3 +50,12 @@ export const getPostMetadataFromLink = (href: string): [id: number, type: PostTy
  * @param elem element to find
  */
 export const includes = <T>(arr: T[], elem: unknown): elem is T => arr.some((x) => x === elem);
+
+/**
+ * @summary type guard for a given object having a key set
+ * @param obj object to check
+ * @param key key to check
+ */
+export const hasKeySet = <T extends object, U extends keyof T>(obj: T, key: U): obj is T & { [P in U]-?: T[U] } => {
+    return key in obj && typeof obj[key] !== "undefined";
+};
