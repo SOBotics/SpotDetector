@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { hasKeySet } from "./utils.js";
 
 export interface BotEnvironment {
     API_KEY: string;
@@ -8,6 +9,21 @@ export interface BotEnvironment {
     TENK_EMAIL: string;
     TENK_PASSWORD: string;
 }
+
+/**
+ * @summary defaults an env var if not set
+ * @param env dotenv parsed output
+ * @param key one of the output keys
+ * @param value default value to set
+ */
+export const defaultEnv = <
+    T extends object,
+    U extends keyof T
+>(env: T, key: U, value: T[U]): T & { [P in U]-?: T[U] } => {
+    if (hasKeySet(env, key)) return env;
+    env[key] = value;
+    return defaultEnv(env, key, value);
+};
 
 /**
  * @summary checks if all env vars are present

@@ -1,7 +1,21 @@
 import { expect } from "chai";
-import { validateEnv } from "../../src/env.js";
+import { defaultEnv, validateEnv } from "../../src/env.js";
 
 describe("Environment variables", () => {
+    describe(defaultEnv.name, () => {
+        it('should correctly default missing variables', () => {
+            const env: { a: number, q?: string; } = { a: 42 };
+            const defaulted = defaultEnv(env, "q", "unknown");
+            expect(defaulted.q).to.equal("unknown");
+        });
+
+        it('should not override variables that are set', () => {
+            const env: { a: number; } = { a: 42 };
+            const defaulted = defaultEnv(env, "a", 24);
+            expect(defaulted.a).to.equal(42);
+        });
+    });
+
     describe(validateEnv.name, () => {
         it('should return false if any of the required variables are missing', () => {
             const status = validateEnv({});
