@@ -50,6 +50,27 @@ describe("Timeline Parsers", () => {
         });
     });
 
+    describe('Undeletions', () => {
+        const { undeletions } = parseTimeline(document);
+
+        const events = Object.values(undeletions);
+
+        it('should correctly parse normal undeletions', () => {
+            const normal = events.find(({ reason }) => reason === "reputation_mod");
+            expect(normal).to.not.be.undefined;
+
+            if (normal) {
+                const { by } = normal;
+                expect(by.length).to.equal(3);
+            }
+        });
+
+        it('should correctly parse self undeletions', () => {
+            const self = events.filter(({ reason }) => reason === "self");
+            expect(self.length).to.equal(3);
+        });
+    });
+
     describe.skip("Close Votes", () => {
 
     });
