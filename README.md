@@ -12,6 +12,46 @@ A bot designed to seek out and provide feedback about potentially bad reviews.
 
 You can find it currently active in the [SOBotics Room](https://chat.stackoverflow.com/rooms/111347/sobotics) currently running under the user [SpotDetector](https://stackoverflow.com/users/10162108/spotdetector).
 
+# Post Timelines
+
+The bot has a built-in parser for post timelines:
+
+| Field         | Type                              | Description       |
+| ------------- | --------------------------------- | ----------------- |
+| `deletions`   | `Record<string, DeletionEvent>`   | deletion events   |
+| `reviews`     | `Record<string, ReviewEvent>`     | review events     |
+| `undeletions` | `Record<string, UndeletionEvent>` | undeletion events |
+| `userId`      | `string`                          | post author id    |
+
+## Events
+
+Each event type is a record of events keyed on event ids.
+
+### Deletions
+
+| Field    | Type               | Description           |
+| -------- | ------------------ | --------------------- |
+| `by`     | `string[]`         | ids of deleting users |
+| `date`   | `string`           | event date            |
+| `reason` | `PostDeleteReason` | deletion reason       |
+
+### Reviews
+
+| Field    | Type                     | Description          |
+| -------- | ------------------------ | -------------------- |
+| `link`   | `string`                 | review link          |
+| `result` | `PostReviewResult`       | review outcome       |
+| `type`   | `ReviewType`             | review type          |
+| `votes`  | `Record<string, number>` | votes cast breakdown |
+
+### Undeletions
+
+| Field    | Type                 | Description           |
+| -------- | -------------------- | --------------------- |
+| `by`     | `string[]`           | ids of deleting users |
+| `date`   | `string`             | event date            |
+| `reason` | `PostUndeleteReason` | deletion reason       |
+
 # Environment variables
 
 | Variable       | Type   | Required? | Default | Description                      |
