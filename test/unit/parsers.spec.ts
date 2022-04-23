@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { readFileSync } from "fs";
 import { JSDOM } from "jsdom";
-import { ReviewType } from "../../src/fetchers/reviews.js";
+import { ReviewType } from "../../src/fetchers/index.js";
 import { parseTimeline } from "../../src/parsers/timeline.js";
 
 describe("Timeline Parsers", () => {

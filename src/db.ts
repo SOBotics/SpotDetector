@@ -1,8 +1,7 @@
 import SQL from "sql-template-strings";
 import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
-import { PostType } from "./fetchers/posts.js";
-import type { ReviewType } from "./fetchers/reviews.js";
+import type { PostType, ReviewType } from "./fetchers/index.js";
 
 /**
  * @summary initializes the database

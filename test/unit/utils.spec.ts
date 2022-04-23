@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { PostType } from "../../src/fetchers/posts.js";
+import { PostType } from "../../src/fetchers/index.js";
 import { getPostMetadataFromLink } from "../../src/utils.js";
 
 describe('Utilities', () => {

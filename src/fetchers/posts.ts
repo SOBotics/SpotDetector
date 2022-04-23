@@ -10,11 +10,6 @@ import Fetcher from "./index.js";
 const TIMELINE_DELAY = 1500;
 const STALE_DELETION = 3 * 24 * 60 * 60;
 
-export enum PostType {
-    A = "answer",
-    Q = "question"
-}
-
 export default class PostFetcher extends Fetcher {
 
     /**

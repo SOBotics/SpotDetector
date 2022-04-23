@@ -1,19 +1,8 @@
 import { addPost, addReview, getLatestReview } from '../db.js';
 import { delay, getPostMetadataFromLink, isErrno } from '../utils.js';
-import Fetcher from './index.js';
+import Fetcher, { ReviewType } from './index.js';
 
 /// <reference types="node" />
-
-export enum ReviewType {
-    CV = "close-votes",
-    RV = "reopen-votes",
-    LQA = "low-quality-answers",
-    SE = "suggested-edits",
-    FA = "first-answers",
-    FQ = "first-questions",
-    LA = "late-answers",
-    T = "triage"
-}
 
 export interface Review {
     review_id: string | null;

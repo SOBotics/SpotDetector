@@ -1,4 +1,4 @@
-import { PostType } from "./fetchers/posts.js";
+import { PostType } from "./fetchers/index.js";
 
 /**
  * @summary delays execution for a time

@@ -1,4 +1,4 @@
-import { ReviewType } from "../fetchers/reviews.js";
+import { ReviewType } from "../fetchers/index.js";
 import { getText, includes } from "../utils.js";
 
 const DUPLICATE_REGEX = /meta\.stackexchange\.com\/q\/104227/i;
