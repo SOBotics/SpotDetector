@@ -1,5 +1,5 @@
 import SQL from "sql-template-strings";
-import sqlite from "sqlite";
+import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import { PostType } from "./fetchers/posts.js";
 import type { ReviewType } from "./fetchers/reviews.js";
@@ -7,7 +7,7 @@ import type { ReviewType } from "./fetchers/reviews.js";
 /**
  * @summary initializes the database
  */
-export const initialize = async () => {
+export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sqlite3.Statement>> => {
     const db = await sqlite.open({
         driver: sqlite3.verbose().Database,
         filename: "./posts.db",
