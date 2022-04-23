@@ -1,7 +1,7 @@
 import type { Post, Wrappers } from "@userscripters/stackexchange-api-types";
 import lodash from "lodash";
 import request from "request-promise-native";
-import { updatePost } from "../db.js";
+import { getPosts, updatePost } from "../db.js";
 import env from "../env.js";
 import { parseTimeline } from "../parsers/timeline.js";
 import { delay } from "../utils.js";
@@ -62,15 +62,7 @@ export default class PostFetcher extends Fetcher {
         while (true) {
             try {
                 //datetime(date, 'unixepoch') >= datetime('now','-3 days') AND
-                const rows = await this.db.all(`
-          SELECT p.*, r.date
-          FROM posts p
-          LEFT JOIN reviews r ON p.id = r.post_id
-          WHERE r.review_result IN ('No Action Needed', 'Looks OK')
-          AND p.deleted IS NULL
-          GROUP BY p.id
-          ORDER BY r.date DESC
-        `);
+                const rows = await getPosts(this.db);
 
                 const nowEpoch = new Date().getTime() / 1000;
 

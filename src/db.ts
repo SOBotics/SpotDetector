@@ -136,6 +136,24 @@ export const updatePost = (
 };
 
 /**
+ * @summary gets post records from the database
+ * @param db database instance
+ */
+export const getPosts = (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>
+) => {
+    return db.all(`
+        SELECT p.*, r.date
+        FROM posts p
+        LEFT JOIN reviews r ON p.id = r.post_id
+        WHERE r.review_result IN ('No Action Needed', 'Looks OK')
+        AND p.deleted IS NULL
+        GROUP BY p.id
+        ORDER BY r.date DESC
+    `);
+}
+
+/**
  * @summary gets latest review from the database by type
  * @param db database instance
  * @param reviewType type of the review
