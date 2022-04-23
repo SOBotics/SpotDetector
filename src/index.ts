@@ -95,10 +95,13 @@ const main = async () => {
 
     await room.watch();
 
+    const { REPORT_DAYS, REPORT_REVIEWS } = env;
+
+    const me = await ce.getMe();
+    const botUsername = await me.name;
+
     // TODO: make configurable
-    const stackapps = mdURL("https://stackapps.com/questions/8091", "SpotDetector");
-    const reportDays = env.REPORT_DAYS;
-    const reportReviews = env.REPORT_REVIEWS;
+    const stackapps = mdURL("https://stackapps.com/questions/8091", botUsername);
     const reportUsername = await ce.getUser(REPORT_USER).name;  // TODO: multiple users, use User class
 
     await room.sendMessage(
@@ -108,14 +111,14 @@ const main = async () => {
     cron.schedule(
         "0 3 * * 5",
         async () => {
-            const report = await generate(db, reportDays, reportReviews);
+            const report = await generate(db, REPORT_DAYS, REPORT_REVIEWS);
             if (!report) return;
 
             const { users, url } = report;
 
             await room.sendMessage(
-                `[ ${stackapps} ] @${reportUsername} Your [${reportDays}-day report](${url}) has arrived. ${users} user${users === 1 ? "" : "s"
-                } found matching ${reportReviews} or more possible bad reviews.`
+                `[ ${stackapps} ] @${reportUsername} Your [${REPORT_DAYS}-day report](${url}) has arrived. ${users} user${users === 1 ? "" : "s"
+                } found matching ${REPORT_REVIEWS} or more possible bad reviews.`
             );
         },
         {
