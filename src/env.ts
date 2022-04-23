@@ -6,6 +6,7 @@ export interface BotEnvironment {
     CHAT_EMAIL: string;
     CHAT_PASSWORD: string;
     CHAT_ROOM: string;
+    REPORT_DAYS: number;
     TENK_EMAIL: string;
     TENK_PASSWORD: string;
 }
@@ -76,4 +77,8 @@ const { parsed } = dotenv.config();
 
 const environment = parseEnv<Partial<BotEnvironment>>(parsed || {});
 
-export default environment;
+const defaulted = defaultAll(environment, {
+    REPORT_DAYS: 8
+});
+
+export default defaulted;

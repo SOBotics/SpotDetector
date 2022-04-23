@@ -20,6 +20,7 @@ You can find it currently active in the [SOBotics Room](https://chat.stackoverfl
 | CHAT_EMAIL    | string | yes       | -       | Chat account email address       |
 | CHAT_PASSWORD | string | yes       | -       | Chat account password            |
 | CHAT_ROOM     | string | yes       | -       | Room id to report to             |
+| REPORT_DAYS   | number | no        | `8`     | Number of days to report         |
 | TENK_EMAIL    | string | yes       | -       | Account email address (10K+ rep) |
 | TENK_PASSWORD | string | yes       | -       | Account password (10K+ rep)      |
 

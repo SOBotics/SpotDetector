@@ -97,7 +97,7 @@ const main = async () => {
 
     // TODO: make configurable
     const stackapps = mdURL("https://stackapps.com/questions/8091", "SpotDetector");
-    const reportDays = 8;
+    const reportDays = env.REPORT_DAYS;
     const reportReviews = 4;
     const reportUsername = "SamuelLiew"; // TODO: multiple users, use User class
 
