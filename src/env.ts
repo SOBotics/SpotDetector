@@ -9,6 +9,7 @@ export interface BotEnvironment {
     REPORT_DAYS: number;
     REPORT_REVIEWS: number;
     REPORT_USER: number;
+    STACKAPPS_POST?: number;
     TENK_EMAIL: string;
     TENK_PASSWORD: string;
 }
@@ -81,6 +82,7 @@ const { parsed } = dotenv.config();
 const environment = parseEnv<Partial<BotEnvironment>>(parsed || {});
 
 const defaulted = defaultAll(environment, {
+    STACKAPPS_POST: 8091,
     REPORT_DAYS: 8,
     REPORT_REVIEWS: 4
 });

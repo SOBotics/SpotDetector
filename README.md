@@ -23,6 +23,7 @@ You can find it currently active in the [SOBotics Room](https://chat.stackoverfl
 | REPORT_DAYS    | number | no        | `8`     | Number of days to report         |
 | REPORT_REVIEWS | number | no        | `4`     | Number of reviews to report      |
 | REPORT_USER    | number | yes       | -       | Chat id of the user to report to |
+| STACKAPPS_POST | number | no        | `8091`  | StackApps post id                |
 | TENK_EMAIL     | string | yes       | -       | Account email address (10K+ rep) |
 | TENK_PASSWORD  | string | yes       | -       | Account password (10K+ rep)      |
 

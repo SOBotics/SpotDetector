@@ -95,13 +95,12 @@ const main = async () => {
 
     await room.watch();
 
-    const { REPORT_DAYS, REPORT_REVIEWS } = env;
+    const { REPORT_DAYS, REPORT_REVIEWS, STACKAPPS_POST } = env;
 
     const me = await ce.getMe();
     const botUsername = await me.name;
 
-    // TODO: make configurable
-    const stackapps = mdURL("https://stackapps.com/questions/8091", botUsername);
+    const stackapps = mdURL(`https://stackapps.com/questions/${STACKAPPS_POST}`, botUsername);
     const reportUsername = await ce.getUser(REPORT_USER).name;  // TODO: multiple users, use User class
 
     await room.sendMessage(
