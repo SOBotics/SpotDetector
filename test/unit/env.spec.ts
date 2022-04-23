@@ -1,7 +1,17 @@
 import { expect } from "chai";
-import { defaultEnv, parseEnv, validateEnv } from "../../src/env.js";
+import { defaultAll, defaultEnv, parseEnv, validateEnv } from "../../src/env.js";
 
 describe("Environment variables", () => {
+    describe(defaultAll.name, () => {
+        it('should correctly default all missing variables', () => {
+            const env: { a?: number, q?: string; } = {};
+            const defaulted = defaultAll(env, { a: 42, q: "unknown" });
+            expect(defaulted.a).to.equal(42);
+            expect(defaulted.q).to.equal("unknown");
+
+        });
+    });
+
     describe(defaultEnv.name, () => {
         it('should correctly default missing variables', () => {
             const env: { a: number, q?: string; } = { a: 42 };

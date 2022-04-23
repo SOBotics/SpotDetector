@@ -26,6 +26,21 @@ export const defaultEnv = <
 };
 
 /**
+ * @summary defaults all env vars specified
+ * @param env dotenv parsed output
+ * @param init value initializers
+ */
+export const defaultAll = <
+    T extends object,
+    U extends keyof T
+>(env: T, init: { [P in U]: T[P] }): T & { [P in U]-?: T[P] } => {
+    return Object.entries(init).reduce(
+        (_, [k, v]) => defaultEnv(env, k as keyof T, v as T[keyof T]),
+        env as any
+    );
+};
+
+/**
  * @summary parses boolean and numeric env vars
  * @param env dotenv parsed output
  */
