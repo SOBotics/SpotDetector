@@ -9,5 +9,5 @@ export default abstract class Fetcher {
      */
     constructor(protected browser: Browser, protected db: Database) { }
 
-    abstract scrape(): Promise<void>;
+    abstract scrapeAll(): Promise<void>;
 }

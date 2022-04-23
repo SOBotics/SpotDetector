@@ -92,17 +92,35 @@ export default class ReviewFetcher extends Fetcher {
 
             await delay(2000);
         }
+
+        return reviewCount;
     }
 
-    async scrape() {
+    /**
+     * @summary scrapes history of a given {@link ReviewType}
+     * @param type type of the review queue
+     */
+    async scrape(type: ReviewType): Promise<number> {
+        console.log(`[${type}] starting scraping`);
+        const reviews = await this.#scrape(type);
+        console.log(`[${type}] finished scraping (${reviews} found)`);
+        return reviews;
+    }
+
+    /**
+     * @summary scrapes history of all review queues
+     */
+    async scrapeAll() {
+        const typenames = Object.keys(ReviewType) as Array<keyof typeof ReviewType>;
+
+        const scrapeInterval = 30 * 60 * 1000;
+
         while (true) {
-            console.log('Starting Review Scrape');
-            // TODO: make dynamic
-            const countLA = await this.#scrape(ReviewType.LA);
-            const countFP = await this.#scrape(ReviewType.FA);
-            const countLQP = await this.#scrape(ReviewType.LQA);
-            console.log(`Scrape finished! Got ${countLA} new late-answers, ${countFP} new first-posts, and ${countLQP} new low-quality-posts.`);
-            await delay(30 * 60 * 1000);
+            for (const typename of typenames) {
+                await this.scrape(ReviewType[typename]);
+            }
+
+            await delay(scrapeInterval);
         }
     }
 }

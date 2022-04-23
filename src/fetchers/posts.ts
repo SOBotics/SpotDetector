@@ -58,7 +58,7 @@ export default class PostFetcher extends Fetcher {
         return postIds.filter(id => !apiPosts.includes(id));
     }
 
-    async scrape() {
+    async scrapeAll() {
         const { db } = this;
 
         while (true) {

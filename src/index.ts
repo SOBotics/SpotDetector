@@ -129,8 +129,8 @@ const main = async () => {
     const rf = new ReviewFetcher(browser, db);
     const pf = new PostFetcher(browser, db);
 
-    await rf.scrape();
-    await pf.scrape();
+    await rf.scrapeAll();
+    await pf.scrapeAll();
 
     process.on("SIGTERM", async () => {
         await room.sendMessage(`[ ${stackapps} ] Shutting down on ${os.hostname()}`);
