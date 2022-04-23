@@ -57,6 +57,7 @@ describe("Environment variables", () => {
             const status = validateEnv({
                 TENK_EMAIL: "tenk@so.com",
                 TENK_PASSWORD: "ab42$_",
+                REPORT_USER: 456,
                 CHAT_EMAIL: "test@tester.org",
                 CHAT_PASSWORD: "42",
                 CHAT_ROOM: "123"

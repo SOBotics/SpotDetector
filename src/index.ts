@@ -17,7 +17,7 @@ const main = async () => {
     }
 
     // FIXME: why is user-defined guard not narrowing?
-    const { TENK_EMAIL, TENK_PASSWORD, CHAT_EMAIL, CHAT_PASSWORD, CHAT_ROOM } = env as Required<BotEnvironment>;
+    const { TENK_EMAIL, TENK_PASSWORD, CHAT_EMAIL, CHAT_PASSWORD, CHAT_ROOM, REPORT_USER } = env as Required<BotEnvironment>;
 
     const db = await dbInit();
     const browser = new Browser();
@@ -99,7 +99,7 @@ const main = async () => {
     const stackapps = mdURL("https://stackapps.com/questions/8091", "SpotDetector");
     const reportDays = env.REPORT_DAYS;
     const reportReviews = env.REPORT_REVIEWS;
-    const reportUsername = "SamuelLiew"; // TODO: multiple users, use User class
+    const reportUsername = await ce.getUser(REPORT_USER).name;  // TODO: multiple users, use User class
 
     await room.sendMessage(
         `[ ${stackapps} ] Started on ${os.hostname()}`

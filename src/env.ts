@@ -8,6 +8,7 @@ export interface BotEnvironment {
     CHAT_ROOM: string;
     REPORT_DAYS: number;
     REPORT_REVIEWS: number;
+    REPORT_USER: number;
     TENK_EMAIL: string;
     TENK_PASSWORD: string;
 }
@@ -66,6 +67,7 @@ export const validateEnv = (env: Partial<BotEnvironment>): env is BotEnvironment
     const requiredEnv: Array<keyof BotEnvironment> = [
         "TENK_EMAIL",
         "TENK_PASSWORD",
+        "REPORT_USER",
         "CHAT_EMAIL",
         "CHAT_PASSWORD",
         "CHAT_ROOM"
