@@ -59,3 +59,9 @@ export const includes = <T>(arr: T[], elem: unknown): elem is T => arr.some((x) 
 export const hasKeySet = <T extends object, U extends keyof T>(obj: T, key: U): obj is T & { [P in U]-?: T[U] } => {
     return key in obj && typeof obj[key] !== "undefined";
 };
+
+/**
+ * @summary gets text content of a given element
+ * @param elem {@link Element} to get the text of
+ */
+export const getText = (elem: Element | null | undefined) => elem?.textContent?.trim() || "";
