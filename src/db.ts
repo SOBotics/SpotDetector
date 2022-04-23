@@ -141,7 +141,7 @@ export const updatePost = (
  */
 export const getPosts = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>
-) => {
+): Promise<{ id: number; type: PostType; date: number; }[]> => {
     return db.all(`
         SELECT p.*, r.date
         FROM posts p
