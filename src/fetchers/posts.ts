@@ -59,10 +59,12 @@ export default class PostFetcher extends Fetcher {
     }
 
     async scrape() {
+        const { db } = this;
+
         while (true) {
             try {
                 //datetime(date, 'unixepoch') >= datetime('now','-3 days') AND
-                const rows = await getPosts(this.db);
+                const rows = await getPosts(db);
 
                 const nowEpoch = new Date().getTime() / 1000;
 
@@ -72,18 +74,20 @@ export default class PostFetcher extends Fetcher {
                     const deleted = await this.#fetchDeleted(chunk.map(r => r.id));
 
                     for (const row of chunk) {
-                        if (!deleted.includes(row.id)) {
-                            if (row.date < nowEpoch - STALE_DELETION) {
+                        const { id, date } = row;
+
+                        if (!deleted.includes(id)) {
+                            if (date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await updatePost(this.db, row.id, { deleted: false });
+                                await updatePost(db, id, { deleted: false });
                             }
                             // console.log(`${row.post_id} is not deleted! Continuing on.`);
                             continue;
                         }
 
-                        console.log(`Scraping timeline for ${row.id}`);
+                        console.log(`Scraping timeline for ${id}`);
                         const html = await this.browser.scrapeHTML(
-                            `/posts/${row.id}/timeline`
+                            `/posts/${id}/timeline`
                         );
 
                         const timeline = parseTimeline(html);
@@ -91,16 +95,16 @@ export default class PostFetcher extends Fetcher {
                         // Check to make sure, question probably got nuked, in this case, I don't care that this was deleted
                         // @ts-ignore
                         if (!timeline.deleted) {
-                            if (row.date < nowEpoch - STALE_DELETION) {
+                            if (date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await updatePost(this.db, row.id, { deleted: false });
+                                await updatePost(db, id, { deleted: false });
                             }
 
                             await delay(TIMELINE_DELAY);
                             continue;
                         }
 
-                        await updatePost(this.db, row.id, { deleted: true });
+                        await updatePost(db, id, { deleted: true });
 
                         await delay(TIMELINE_DELAY);
                     }
