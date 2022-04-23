@@ -1,5 +1,6 @@
 import { ReviewType } from "../fetchers/index.js";
 import { getText, includes } from "../utils.js";
+import { parseEventDate, parseUserIdFromLink } from "./index.js";
 
 const DUPLICATE_REGEX = /meta\.stackexchange\.com\/q\/104227/i;
 
@@ -66,18 +67,6 @@ export interface PostTimeline {
     undeletions: Record<string, UndeletionEvent>;
     userId: string;
 }
-
-/**
- * @summary parses event date
- * @param cell cell with event date
- */
-const parseEventDate = (cell: HTMLTableCellElement): string => cell.querySelector<HTMLSpanElement>("span.relativetime")?.title || "";
-
-/**
- * @summary parses linked user id
- * @param link link to parse
- */
-const parseUserIdFromLink = (link: HTMLAnchorElement): string => link.href.split("/")[2];
 
 /**
  * @summary parses unlinked user id (e.g. deleted users)
