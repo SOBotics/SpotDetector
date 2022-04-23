@@ -14,6 +14,10 @@ export type PostDeleteReason =
     | "diamond_mod_convert"
     | "diamond_mod";
 
+export type PostUndeleteReason =
+    | "reputation_mod"
+    | "self"
+
 export type PostReviewResult =
     | "completed"
     | "invalidated";
@@ -53,6 +57,7 @@ export type ReviewEvent = {
 export type UndeletionEvent = {
     by: string[],
     date: string;
+    reason: PostUndeleteReason | "";
 };
 
 export interface PostTimeline {
@@ -194,14 +199,24 @@ const parseReviewEvent = (
  * @param row table row of the event
  * @param userCell cell with user ids
  * @param date date of the event
+ * @param authorUserId user id of the post author
  */
 const parseUndeleteEvent = (
     row: HTMLTableRowElement,
     userCell: HTMLTableCellElement,
-    date: string
+    date: string,
+    authorUserId?: string
 ): UndeletionEvent => {
-    const undeletion: UndeletionEvent = { by: [], date };
-    undeletion.by = parseUserIds(row, userCell);
+    const undeletion: UndeletionEvent = { by: [], date, reason: "reputation_mod" };
+
+    const userIds = parseUserIds(row, userCell);
+
+    // the post has been self-deleted
+    if (includes(userIds, authorUserId)) {
+        undeletion.reason = "self";
+    }
+
+    undeletion.by = userIds;
     return undeletion;
 };
 
@@ -258,7 +273,7 @@ export const parseTimeline = (doc: Document): PostTimeline => {
                             break;
                         }
                         case "undeleted": {
-                            info.undeletions[eventid] = parseUndeleteEvent(row, userCell, date);
+                            info.undeletions[eventid] = parseUndeleteEvent(row, userCell, date, authorUserId);
                             break;
                         }
                     }
