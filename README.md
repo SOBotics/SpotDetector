@@ -10,7 +10,9 @@ A bot designed to seek out and provide feedback about potentially bad reviews.
 
 # Check it out
 
-You can find it currently active in the [SOBotics Room](https://chat.stackoverflow.com/rooms/111347/sobotics) currently running under the user [SpotDetector](https://stackoverflow.com/users/10162108/spotdetector).
+> SpotDetector is currently inactive
+
+You can find it in the [SOBotics Room](https://chat.stackoverflow.com/rooms/111347/sobotics) running under the user [SpotDetector](https://stackoverflow.com/users/10162108/spotdetector).
 
 # Post Timelines
 
