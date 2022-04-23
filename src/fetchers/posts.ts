@@ -1,7 +1,7 @@
 import type { Post, Wrappers } from "@userscripters/stackexchange-api-types";
 import lodash from "lodash";
 import request from "request-promise-native";
-import { SQL } from "sql-template-strings";
+import { updatePost } from "../db.js";
 import env from "../env.js";
 import { parseTimeline } from "../parsers/timeline.js";
 import { delay } from "../utils.js";
@@ -83,11 +83,7 @@ export default class PostFetcher extends Fetcher {
                         if (!deleted.includes(row.id)) {
                             if (row.date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await this.db.run(SQL`
-                  UPDATE posts
-                  SET deleted = 0, delete_reason = NULL
-                  WHERE id = ${row.id}
-                `);
+                                await updatePost(this.db, row.id, { deleted: false });
                             }
                             // console.log(`${row.post_id} is not deleted! Continuing on.`);
                             continue;
@@ -101,26 +97,18 @@ export default class PostFetcher extends Fetcher {
                         const timeline = parseTimeline(html);
 
                         // Check to make sure, question probably got nuked, in this case, I don't care that this was deleted
+                        // @ts-ignore
                         if (!timeline.deleted) {
                             if (row.date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
-                                await this.db.run(SQL`
-                  UPDATE posts
-                  SET deleted = 0, delete_reason = NULL
-                  WHERE id = ${row.id}
-                `);
+                                await updatePost(this.db, row.id, { deleted: false });
                             }
 
                             await delay(TIMELINE_DELAY);
                             continue;
                         }
 
-                        await this.db.run(SQL`
-                            UPDATE posts
-                            SET deleted = 1, delete_reason = ${timeline.deleteReason ||
-                            null}
-                            WHERE id = ${row.id}
-                        `);
+                        await updatePost(this.db, row.id, { deleted: true });
 
                         await delay(TIMELINE_DELAY);
                     }

@@ -113,6 +113,29 @@ export const addReview = (
 };
 
 /**
+ * @summary updates a post
+ * @param db database instance
+ * @param id id of the post
+ * @param init post information
+ */
+export const updatePost = (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+    id: number,
+    init: {
+        deleted?: boolean;
+        deleteReason?: string;
+    }
+) => {
+    const { deleted = false, deleteReason = null } = init;
+
+    return db.run(SQL`
+        UPDATE posts
+        SET deleted = ${deleted ? 1 : 0}, delete_reason = ${deleteReason}
+        WHERE id = ${id}
+    `);
+};
+
+/**
  * @summary gets latest review from the database by type
  * @param db database instance
  * @param reviewType type of the review
