@@ -1,8 +1,46 @@
 import { expect } from "chai";
 import { readFileSync } from "fs";
 import { JSDOM } from "jsdom";
-import { ReviewType } from "../../src/fetchers/index.js";
+import { PostType, ReviewType } from "../../src/fetchers/index.js";
+import { parseReviews } from "../../src/parsers/reviews.js";
 import { parseTimeline } from "../../src/parsers/timeline.js";
+
+describe('Review Parsers', () => {
+
+    const postMock = readFileSync("test/mocks/suggested-edits.html", { encoding: "utf-8" });
+    const { window: { document } } = new JSDOM(postMock);
+
+    describe('Suggested Edits', () => {
+        const reviews = parseReviews(document, ReviewType.SE);
+
+        it('should correctly parse reviews', () => {
+            const testId = "31505074";
+
+            const test = reviews[testId];
+            expect(test).to.not.be.undefined;
+
+            const {
+                user_id,
+                user_name,
+                review_id,
+                post_type,
+                post_id,
+                type,
+                date,
+                action
+            } = test;
+
+            expect(type).to.equal(ReviewType.SE);
+            expect(action).to.equal("approve");
+            expect(date).to.equal("2022-04-10 23:30:16Z");
+            expect(post_id).to.equal(71821291);
+            expect(post_type).to.equal(PostType.Q);
+            expect(review_id).to.equal(testId);
+            expect(user_id).to.equal("116908");
+            expect(user_name).to.equal("Carl Norum");
+        });
+    });
+});
 
 describe("Timeline Parsers", () => {
 
