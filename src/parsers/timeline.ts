@@ -1,146 +1,273 @@
+import { ReviewType } from "../fetchers/reviews.js";
+import { getText, includes } from "../utils.js";
+
 const DUPLICATE_REGEX = /meta\.stackexchange\.com\/q\/104227/i;
 
-interface PostTimeline {
-    deleted: boolean | null,
-    deletedBy: string[],
-    deleteReason: string,
-    reviews: Record<string, {
-        eventid: string,
-        link: string,
-        result?: string,
-        type: string;
-    }>;
+const REVIEW_VOTE_REGEX = /(\w[\w\s]+)\s+[\u00D7]\s+(\d+)/gm;
+
+export type PostDeleteReason =
+    | "self_nuked"
+    | "self"
+    | "review"
+    | "reputation_mod"
+    | "duplicate"
+    | "diamond_mod_convert"
+    | "diamond_mod";
+
+export type PostReviewResult =
+    | "completed"
+    | "invalidated";
+
+export type PostTimelineType =
+    | "added"
+    | "answered"
+    | "asked"
+    | "bounty ended"
+    | "bounty started"
+    | "deleted"
+    | "edited"
+    | "locked"
+    | "notice added"
+    | "notice removed"
+    | "other"
+    | "post deleted from review"
+    | "protected"
+    | "rollback"
+    | "suggested"
+    | "undeleted"
+    | "unlocked";
+
+export type DeletionEvent = {
+    by: string[],
+    date: string;
+    reason: PostDeleteReason | "";
+};
+
+export type ReviewEvent = {
+    link: string,
+    result?: PostReviewResult | string,
+    type: ReviewType;
+    votes: Record<string, number>;
+};
+
+export type UndeletionEvent = {
+    by: string[],
+    date: string;
+};
+
+export interface PostTimeline {
+    deletions: Record<string, DeletionEvent>,
+    reviews: Record<string, ReviewEvent>;
+    undeletions: Record<string, UndeletionEvent>;
+    userId: string;
 }
 
-export const parseTimeline = (doc: Document) => {
-    const rows = [...doc.querySelectorAll<HTMLTableRowElement>(".event-rows tr:not(.separator)")];
+/**
+ * @summary parses event date
+ * @param cell cell with event date
+ */
+const parseEventDate = (cell: HTMLTableCellElement): string => cell.querySelector<HTMLSpanElement>("span.relativetime")?.title || "";
 
+/**
+ * @summary parses linked user id
+ * @param link link to parse
+ */
+const parseUserIdFromLink = (link: HTMLAnchorElement): string => link.href.split("/")[2];
+
+/**
+ * @summary parses unlinked user id (e.g. deleted users)
+ * @param row table row of the event
+ */
+const parseUnlinkedUserId = (row: HTMLTableRowElement): string => getText(row.querySelector(".created-by"));
+
+/**
+ * @summary parses user ids from an event cell
+ * @param row table row of the event
+ * @param cell cell with user ids
+ */
+const parseUserIds = (
+    row: HTMLTableRowElement,
+    cell: HTMLTableCellElement
+): string[] => {
+    const userAs = [...cell.querySelectorAll("a")];
+    const linkedUserIds = userAs.map(parseUserIdFromLink);
+    const unlinkedUserIds = userAs.length ? [] : [parseUnlinkedUserId(row)];
+    return [...linkedUserIds, ...unlinkedUserIds];
+};
+
+/**
+ * @summary parses a {@link DeletionEvent}
+ * @param row table row of the event
+ * @param userCell cell with user ids
+ * @param date date of the event
+ * @param comment event comment
+ * @param authorUserId user id of the post author
+ */
+const parseDeleteEvent = (
+    row: HTMLTableRowElement,
+    userCell: HTMLTableCellElement,
+    date: string,
+    comment: string,
+    authorUserId?: string
+): DeletionEvent => {
+    const deletion: DeletionEvent = { date, by: [], reason: "reputation_mod" };
+
+    const flair = userCell.querySelector(".mod-flair");
+
+    if (flair) {
+        deletion.reason = comment === "Converted to Comment" ? "diamond_mod_convert" : "diamond_mod";
+    }
+
+    const { nextElementSibling: commentRow } = row;
+    if (commentRow) {
+        const { cells } = commentRow as HTMLTableRowElement;
+        const [_, typeCell, __, ___, ____, commentCell] = cells;
+
+        const type = getText(typeCell);
+        const commentLinks = [...commentCell.querySelectorAll("a")];
+
+        const isDuplicateAnswerDeletion = commentLinks.some(({ href }) => DUPLICATE_REGEX.test(href));
+        if (type === "comment" && isDuplicateAnswerDeletion) {
+            deletion.reason = "duplicate";
+        }
+    }
+
+    const userIds = parseUserIds(row, userCell);
+
+    // the post has been self-deleted
+    if (includes(userIds, authorUserId)) {
+        deletion.reason = authorUserId.startsWith("user") ? "self_nuked" : "self";
+    }
+
+    deletion.by = userIds;
+    return deletion;
+};
+
+/**
+ * @summary parses a {@link DeletionEvent} (from review)
+ * @param row table row of the event
+ * @param userCell cell with user ids
+ * @param date date of the event
+ */
+const parseReviewDeleteEvent = (
+    row: HTMLTableRowElement,
+    userCell: HTMLTableCellElement,
+    date: string
+): DeletionEvent => {
+    const deletion: DeletionEvent = { date, by: [], reason: "review" };
+    deletion.by = parseUserIds(row, userCell);
+    return deletion;
+};
+
+/**
+ * @summary parses a {@link ReviewEvent}
+ * @param row table row of the event
+ * @param verbCell cell with review type
+ */
+const parseReviewEvent = (
+    row: HTMLTableRowElement,
+    verbCell: HTMLTableCellElement
+): ReviewEvent | undefined => {
+    const reviewLink = verbCell.querySelector("a");
+    const link = reviewLink?.href || "";
+
+    const type = link.replace(/\/review\/(.+?)\/\d+/, "$1") as ReviewType | undefined;
+    if (!type) return;
+
+    const { nextElementSibling: commentRow } = row;
+    const { cells: [_, __, resultCell, ___, ____, commentCell] } = commentRow as HTMLTableRowElement;
+
+    const result = getText(resultCell) as PostReviewResult | "";
+
+    const review: ReviewEvent = { link, result, type, votes: {} };
+
+    const comment = getText(commentCell);
+
+    const matches = [...comment.matchAll(REVIEW_VOTE_REGEX)];
+    matches.forEach(([, vote, voters]) => review.votes[vote.toLowerCase()] = +voters);
+
+    return review;
+};
+
+/**
+ * @summary parses an {@link UndeletionEvent}
+ * @param row table row of the event
+ * @param userCell cell with user ids
+ * @param date date of the event
+ */
+const parseUndeleteEvent = (
+    row: HTMLTableRowElement,
+    userCell: HTMLTableCellElement,
+    date: string
+): UndeletionEvent => {
+    const undeletion: UndeletionEvent = { by: [], date };
+    undeletion.by = parseUserIds(row, userCell);
+    return undeletion;
+};
+
+/**
+ * @summary parses timeline of a given post
+ * @param doc {@link Document} to process
+ */
+export const parseTimeline = (doc: Document): PostTimeline => {
     const init: PostTimeline = {
-        deleted: null,
-        deletedBy: [],
-        deleteReason: "",
-        reviews: {}
+        deletions: {},
+        reviews: {},
+        undeletions: {},
+        userId: ""
     };
 
-    return rows.reduce(
+    const wrapper = doc.querySelector(".post-timeline");
+    if (!wrapper) return init;
+
+    const rows = [...wrapper.querySelectorAll<HTMLTableRowElement>(".event-rows tr:not(.separator)")];
+
+    let authorUserId: string | undefined;
+
+    return rows.reduceRight(
         (info, row) => {
             const { dataset } = row;
 
             const { eventid, eventtype } = dataset;
 
-            const verbElem = row.querySelector<HTMLSpanElement>(".event-verb span");
+            if (!eventid) return info;
 
-            const verb = verbElem?.textContent || "";
+            const { cells } = row;
+
+            const [dateCell, _typeCell, verbCell, userCell, _attribCell, commentCell] = cells;
+
+            const comment = getText(commentCell);
+            const date = parseEventDate(dateCell);
 
             switch (eventtype) {
                 case "history":
+                    const verb = verbCell?.textContent?.trim() as PostTimelineType || "other";
+
                     switch (verb) {
                         case "asked":
                         case "answered":
-                            const userA = row.querySelector<HTMLAnchorElement>(".created-by a");
-
-                            let userId;
-
-                            if (userA) {
-                                userId = userA.href.split("/")[2];
-                            } else {
-                                userId = row.querySelector(".created-by")?.textContent?.trim();
-                            }
-
-                            if (!userId) break;
-
-                            if (
-                                info.deleted &&
-                                info.deletedBy.includes(userId) &&
-                                info.deleteReason !== "duplicate"
-                            ) {
-                                info.deleteReason = userId.startsWith("user")
-                                    ? "self_nuked"
-                                    : "self";
-                            }
+                            const userLink = userCell.querySelector("a");
+                            authorUserId = userLink ? parseUserIdFromLink(userLink) : userCell?.textContent?.trim();
+                            init.userId = authorUserId || "";
                             break;
                         case "post deleted from review":
-                            if (info.deleted === null) {
-                                info.deleteReason = "review";
-                                info.deleted = true;
-                            }
+                            info.deletions[eventid] = parseReviewDeleteEvent(row, userCell, date);
                             break;
-                        case "deleted":
-                            if (info.deleted === null) {
-                                info.deleted = true;
-
-                                if (info.deleteReason !== "duplicate") {
-                                    const flair = row.querySelector(".created-by .mod-flair");
-
-                                    if (flair) {
-                                        if (
-                                            row.querySelector(".event-comment span")?.textContent?.trim() === "Converted to Comment"
-                                        ) {
-                                            info.deleteReason = "diamond_mod_convert";
-                                        } else {
-                                            info.deleteReason = "diamond_mod";
-                                        }
-                                    } else {
-                                        info.deleteReason = "reputation_mod";
-                                    }
-                                }
-
-                                const userAs = [...row.querySelectorAll<HTMLAnchorElement>(".created-by a")];
-
-                                info.deletedBy = [
-                                    ...userAs.map((el) => el.href.split("/")[2]),
-                                    ...(userAs.length
-                                        ? []
-                                        : [row.querySelector(".created-by")?.textContent?.trim() || ""])
-                                ];
-                            }
+                        case "deleted": {
+                            info.deletions[eventid] = parseDeleteEvent(row, userCell, date, comment, authorUserId);
                             break;
-                        case "undeleted":
-                            if (info.deleted === null) {
-                                info.deleted = false;
-                            }
-                            break;
-                    }
-                    break;
-                case "comment":
-                    const commentElem = row.querySelector(".event-comment span");
-
-                    const comment = commentElem?.innerHTML || "";
-
-                    if (DUPLICATE_REGEX.test(comment)) {
-                        info.deleteReason = "duplicate";
-                    }
-                case "review":
-                    if (row.classList.contains("deleted-event")) {
-                        const a = row.querySelector<HTMLAnchorElement>(".event-verb span a");
-
-                        const link = a?.href || "";
-                        const reviewType = a?.textContent?.trim();
-
-                        if (eventid) {
-                            switch (reviewType) {
-                                case "late answer":
-                                case "first post":
-                                    info.reviews[eventid] = {
-                                        eventid,
-                                        link,
-                                        type: reviewType
-                                    };
-                                    break;
-                            }
                         }
-                    } else if (
-                        row.classList.contains("deleted-event-details") &&
-                        eventid &&
-                        typeof info.reviews[eventid] !== "undefined"
-                    ) {
-                        const commentElem = row.querySelector<HTMLSpanElement>(".event-comment span");
-
-                        const comment = commentElem?.textContent?.trim() || "";
-
-                        info.reviews[eventid].result = comment.replace(/ × 1$/, "");
+                        case "undeleted": {
+                            info.undeletions[eventid] = parseUndeleteEvent(row, userCell, date);
+                            break;
+                        }
                     }
                     break;
+                case "review": {
+                    const review = parseReviewEvent(row, verbCell);
+                    if (review) info.reviews[eventid] = review;
+                    break;
+                }
             }
 
             return info;
