@@ -26,6 +26,22 @@ export const defaultEnv = <
 };
 
 /**
+ * @summary parses boolean and numeric env vars
+ * @param env dotenv parsed output
+ */
+export const parseEnv = <T extends Record<string, unknown>>(env: { [P in keyof T]: string }): { [P in keyof typeof env]: T[P] } => {
+    const output: Record<string, string | boolean | number> = {};
+
+    Object.entries(env).forEach(([k, v]) => {
+        if (v === "true") return output[k] = true;
+        if (v === "false") return output[k] = false;
+        if (!Number.isNaN(+v)) return output[k] = +v;
+    });
+
+    return output as any;
+};
+
+/**
  * @summary checks if all env vars are present
  * @param env bot environment variables
  */
@@ -43,6 +59,6 @@ export const validateEnv = (env: Partial<BotEnvironment>): env is BotEnvironment
 
 const { parsed } = dotenv.config();
 
-const environment: Partial<BotEnvironment> = parsed || {};
+const environment = parseEnv<Partial<BotEnvironment>>(parsed || {});
 
 export default environment;

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { defaultEnv, validateEnv } from "../../src/env.js";
+import { defaultEnv, parseEnv, validateEnv } from "../../src/env.js";
 
 describe("Environment variables", () => {
     describe(defaultEnv.name, () => {
@@ -13,6 +13,27 @@ describe("Environment variables", () => {
             const env: { a: number; } = { a: 42 };
             const defaulted = defaultEnv(env, "a", 24);
             expect(defaulted.a).to.equal(42);
+        });
+    });
+
+    describe(parseEnv.name, () => {
+        it('should correctly parse variables', () => {
+            type TestEnv = {
+                answer: number;
+                questionKnown: boolean;
+                answerExists: boolean;
+            };
+
+            const env: Record<keyof TestEnv, string> = {
+                answer: "42",
+                questionKnown: "false",
+                answerExists: "true"
+            };
+
+            const { answer, answerExists, questionKnown } = parseEnv<TestEnv>(env);
+            expect(answer).to.equal(42);
+            expect(answerExists).to.be.true;
+            expect(questionKnown).to.be.false;
         });
     });
 
