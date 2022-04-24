@@ -89,24 +89,24 @@ export const addReview = (
     id: string,
     type: ReviewType,
     init: {
-        userId: string,
-        userName: string,
-        postId: number,
-        dateInt: number,
-        reviewAction: string;
+        user_id: string,
+        user_name: string,
+        post_id: number,
+        date: number,
+        action: string;
     }
 ) => {
-    const { userId, userName, postId, dateInt, reviewAction } = init;
+    const { user_id, user_name, post_id, date, action } = init;
 
     return db.run(SQL`
         INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
             ${id},
             ${type},
-            ${userId},
-            ${userName},
-            ${postId},
-            ${dateInt},
-            ${reviewAction}
+            ${user_id},
+            ${user_name},
+            ${post_id},
+            ${date},
+            ${action}
         )
     `);
 };
