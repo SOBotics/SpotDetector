@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { addPost, addReview, createPostsTable, createReviewsTable, openDatabase, PostFromDB, ReviewFromDB } from "../../src/db.js";
+import { addPost, addReview, createPostsTable, createReviewsTable, openDatabase, PostFromDB, ReviewFromDB, updatePost } from "../../src/db.js";
 import { PostType, ReviewType } from "../../src/fetchers/index.js";
 
 describe('Database', () => {
@@ -78,6 +78,25 @@ describe('Database', () => {
 
             expect(answer.type).to.equal(PostType.A);
             expect(question.type).to.equal(PostType.Q);
+        });
+    });
+
+    describe(updatePost.name, () => {
+        it('should correctly update posts', async () => {
+            const db = await openDatabase(":memory:");
+
+            await createPostsTable(db);
+
+            await addPost(db, 42, PostType.Q);
+
+            await updatePost(db, 42, { deleted: true, deleteReason: "because" });
+
+            const posts: PostFromDB[] = await db.all("SELECT * FROM posts WHERE id = 42");
+
+            const [{ delete_reason, deleted }] = posts;
+
+            expect(deleted).to.equal(1);
+            expect(delete_reason).to.equal("because");
         });
     });
 
