@@ -54,11 +54,10 @@ export default class PostFetcher extends Fetcher {
     }
 
     async scrapeAll() {
-        const { db } = this;
+        const { db, browser } = this;
 
         while (true) {
             try {
-                //datetime(date, 'unixepoch') >= datetime('now','-3 days') AND
                 const rows = await getPosts(db);
 
                 const nowEpoch = new Date().getTime() / 1000;
@@ -76,14 +75,11 @@ export default class PostFetcher extends Fetcher {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
                                 await updatePost(db, id, { deleted: false });
                             }
-                            // console.log(`${row.post_id} is not deleted! Continuing on.`);
                             continue;
                         }
 
                         console.log(`Scraping timeline for ${id}`);
-                        const html = await this.browser.scrapeHTML(
-                            `/posts/${id}/timeline`
-                        );
+                        const html = await browser.scrapeHTML(`/posts/${id}/timeline`);
 
                         const timeline = parseTimeline(html);
 
