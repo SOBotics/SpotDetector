@@ -7,6 +7,7 @@ import type { Review } from "./parsers/reviews.js";
 export type PostFromDB = {
     id: number,
     type: PostType,
+    user_id: number,
     deleted: null,
     delete_reason: null;
 };
@@ -44,6 +45,7 @@ export const createPostsTable = async (
     return db.exec(`
         CREATE TABLE IF NOT EXISTS posts (
             id             INTEGER NOT NULL,
+            user_id        INTEGER NOT NULL,
             type           TEXT    NOT NULL,
             deleted        INTEGER,
             delete_reason  TEXT,
@@ -111,6 +113,7 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
     });
 
     await createIndex(db, "posts", "idx_post_deleted", { deleted: "asc" }, "deleted IS NULL");
+    await createIndex(db, "posts", "idx_user_id", { user_id: "asc" });
 
     return db;
 };
@@ -120,18 +123,18 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
  * @param db database instance
  * @param id id of the post
  * @param type type of the post
+ * @param uid author user id
  */
 export const addPost = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
     id: number,
-    type: PostType
+    type: PostType,
+    uid?: number
 ) => {
-    return db.run(SQL`
-        INSERT OR IGNORE INTO posts (id, type) VALUES (
-            ${id},
-            ${type}
-        )
-    `);
+    const columns = `id, type${uid ? ", user_id" : ""}`;
+    const values = `${id}, '${type}'${uid ? `, ${uid}` : ""}`;
+
+    return db.run(`INSERT OR IGNORE INTO posts (${columns}) VALUES (${values})`);
 };
 
 /**
@@ -170,13 +173,14 @@ export const updatePost = (
     init: {
         deleted?: boolean;
         deleteReason?: string;
+        user_id?: number
     }
 ) => {
-    const { deleted = false, deleteReason = null } = init;
+    const { deleted = false, deleteReason = null, user_id = null } = init;
 
     return db.run(SQL`
         UPDATE posts
-        SET deleted = ${deleted ? 1 : 0}, delete_reason = ${deleteReason}
+        SET deleted = ${deleted ? 1 : 0}, delete_reason = ${deleteReason}, user_id = ifnull(${user_id}, user_id)
         WHERE id = ${id}
     `);
 };

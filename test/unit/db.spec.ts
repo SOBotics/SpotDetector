@@ -11,11 +11,14 @@ describe('Database', () => {
 
             const columns = await db.all("pragma table_info('posts')");
 
-            const [id, type, deleted, reason] = columns;
+            const [id, uid, type, deleted, reason] = columns;
 
             expect(id.type).to.equal("INTEGER");
             expect(id.notnull).to.equal(1);
             expect(id.pk).to.equal(1);
+
+            expect(uid.type).to.equal("INTEGER");
+            expect(uid.notnull).to.equal(1);
 
             expect(type.type).to.equal("TEXT");
             expect(type.notnull).to.equal(1);
@@ -66,8 +69,8 @@ describe('Database', () => {
 
             await createPostsTable(db);
 
-            await addPost(db, 42, PostType.A);
-            await addPost(db, 9000, PostType.Q);
+            await addPost(db, 42, PostType.A, -1);
+            await addPost(db, 9000, PostType.Q, 1);
 
             const posts: PostFromDB[] = await db.all("SELECT * FROM posts WHERE id in (42,9000)");
 
@@ -75,6 +78,9 @@ describe('Database', () => {
 
             expect(answer.id).to.equal(42);
             expect(question.id).to.equal(9000);
+
+            expect(answer.user_id).to.equal(-1);
+            expect(question.user_id).to.equal(1);
 
             expect(answer.type).to.equal(PostType.A);
             expect(question.type).to.equal(PostType.Q);
@@ -87,16 +93,37 @@ describe('Database', () => {
 
             await createPostsTable(db);
 
-            await addPost(db, 42, PostType.Q);
+            await addPost(db, 42, PostType.Q, -1);
 
-            await updatePost(db, 42, { deleted: true, deleteReason: "because" });
+            await updatePost(db, 42, {
+                deleted: true,
+                deleteReason: "because",
+                user_id: 1
+            });
 
             const posts: PostFromDB[] = await db.all("SELECT * FROM posts WHERE id = 42");
 
-            const [{ delete_reason, deleted }] = posts;
+            const [{ delete_reason, deleted, user_id }] = posts;
 
             expect(deleted).to.equal(1);
             expect(delete_reason).to.equal("because");
+            expect(user_id).to.equal(1);
+        });
+
+        it('should not update nullable columns if not passed', async () => {
+            const db = await openDatabase(":memory:");
+
+            await createPostsTable(db);
+
+            await addPost(db, 42, PostType.Q, -1);
+
+            await updatePost(db, 42, { deleted: false });
+
+            const posts: PostFromDB[] = await db.all("SELECT * FROM posts WHERE id = 42");
+
+            const [{ user_id }] = posts;
+
+            expect(user_id).to.equal(-1);
         });
     });
 

@@ -24,7 +24,7 @@ export default class PostFetcher extends Fetcher {
         const latestUndeletion = getLatestTimelineEvent(timeline, "undeletions");
         const deleted = latestDeletion && (!latestUndeletion || (latestDeletion.date > latestUndeletion.date));
 
-        await updatePost(db, id, { deleted });
+        await updatePost(db, id, { deleted, user_id: +timeline.userId });
         await delay(TIMELINE_DELAY);
 
         console.log(`[${id}] finished scraping timeline`);
