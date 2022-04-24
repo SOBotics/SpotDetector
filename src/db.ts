@@ -6,8 +6,8 @@ import type { PostType, ReviewType } from "./fetchers/index.js";
 export type PostFromDB = {
     id: number,
     type: PostType,
-    post_deleted: null,
-    post_delete_reason: null;
+    deleted: null,
+    delete_reason: null;
 };
 
 export type ReviewFromDB = {
@@ -38,10 +38,10 @@ export const createPostsTable = async (
 ): Promise<void> => {
     return db.exec(`
         CREATE TABLE IF NOT EXISTS posts (
-            id                  INTEGER NOT NULL,
-            type                TEXT    NOT NULL,
-            post_deleted        INTEGER,
-            post_delete_reason  TEXT,
+            id             INTEGER NOT NULL,
+            type           TEXT    NOT NULL,
+            deleted        INTEGER,
+            delete_reason  TEXT,
             PRIMARY KEY(id)
         );`);
 };
