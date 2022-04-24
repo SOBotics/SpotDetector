@@ -1,3 +1,4 @@
+import type { ReviewFromDB } from "../db.js";
 import type { PostType, ReviewType } from "../fetchers/index.js";
 import { getPostMetadataFromLink, getText } from "../utils.js";
 import { parseEventDate, parseUserIdFromLink } from "./index.js";
@@ -22,7 +23,7 @@ export interface Review {
 export const parseReviews = (
     doc: Document,
     type: ReviewType,
-    latestReview?: Review
+    latestReview?: Review | ReviewFromDB
 ) => {
     const reviews: Record<string, Review> = {};
 

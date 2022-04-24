@@ -1,7 +1,7 @@
 import type { Database } from "sqlite";
 import type Browser from "../browser.js";
-import { addPost, addReview, getLatestReview } from '../db.js';
-import { parseReviews, Review } from '../parsers/reviews.js';
+import { addPost, addReview, getLatestReview, ReviewFromDB } from '../db.js';
+import { parseReviews } from '../parsers/reviews.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher, { ReviewType } from './index.js';
 
@@ -22,7 +22,7 @@ export default class ReviewFetcher extends Fetcher {
 
         if (page > this.#pages) return count;
 
-        const latestReview: Review | undefined = await getLatestReview(db, reviewType);
+        const latestReview: ReviewFromDB | undefined = await getLatestReview(db, reviewType);
 
         console.log(`[${reviewType}] scraping page ${page}`);
 

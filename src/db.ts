@@ -10,6 +10,16 @@ export type PostFromDB = {
     post_delete_reason: null;
 };
 
+export type ReviewFromDB = {
+    review_id: number,
+    review_type: ReviewType,
+    user_id: number,
+    user_name: string,
+    post_id: number,
+    date: number,
+    review_result: string;
+}
+
 export const openDatabase = async (filename: string): Promise<
     sqlite.Database<sqlite3.Database, sqlite3.Statement>
 > => {
@@ -202,7 +212,7 @@ export const getPosts = (
 export const getLatestReview = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
     reviewType: ReviewType
-) => {
+): Promise<ReviewFromDB | undefined> => {
     return db.get(SQL`
             SELECT review_id, user_id
             FROM reviews
