@@ -3,7 +3,7 @@ import lodash from "lodash";
 import request from "request-promise-native";
 import { getPosts, updatePost } from "../db.js";
 import env from "../env.js";
-import { parseTimeline } from "../parsers/timeline.js";
+import { getLatestTimelineEvent, parseTimeline } from "../parsers/timeline.js";
 import { delay } from "../utils.js";
 import Fetcher from "./index.js";
 
@@ -87,9 +87,12 @@ export default class PostFetcher extends Fetcher {
 
                         const timeline = parseTimeline(html);
 
+                        const latestDeletion = getLatestTimelineEvent(timeline, "deletions");
+                        const latestUndeletion = getLatestTimelineEvent(timeline, "undeletions");
+                        const isDeleted = latestDeletion && (!latestUndeletion || (latestDeletion.date > latestUndeletion.date));
+
                         // Check to make sure, question probably got nuked, in this case, I don't care that this was deleted
-                        // @ts-ignore
-                        if (!timeline.deleted) {
+                        if (!isDeleted) {
                             if (date < nowEpoch - STALE_DELETION) {
                                 // It's been 3 days. If it hasn't been deleted at this point, just ignore
                                 await updatePost(db, id, { deleted: false });
