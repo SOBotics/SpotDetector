@@ -4,6 +4,23 @@ import sqlite3 from "sqlite3";
 import type { PostType, ReviewType } from "./fetchers/index.js";
 
 /**
+ * @summary creates table for storing posts
+ * @param db database instance
+ */
+export const createPostsTable = async (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+): Promise<void> => {
+    return db.exec(`
+        CREATE TABLE IF NOT EXISTS posts (
+            id                  INTEGER NOT NULL,
+            type                TEXT    NOT NULL,
+            post_deleted        INTEGER,
+            post_delete_reason  TEXT,
+            PRIMARY KEY(id)
+        );`);
+};
+
+/**
  * @summary initializes the database
  */
 export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sqlite3.Statement>> => {
@@ -13,14 +30,7 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
         mode: sqlite3.OPEN_CREATE
     });
 
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS posts (
-            id	INTEGER NOT NULL,
-            type	TEXT NOT NULL,
-            post_deleted INTEGER,
-            post_delete_reason TEXT,
-            PRIMARY KEY(id)
-        );`);
+    await createPostsTable(db);
 
     await db.exec(`
         CREATE TABLE IF NOT EXISTS reviews (
