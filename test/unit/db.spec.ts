@@ -108,10 +108,12 @@ describe('Database', () => {
 
             const now = Math.trunc(Date.now() / 1000);
 
-            await addReview(db, "42", ReviewType.SE, {
+            await addReview(db, {
                 action: "approve",
                 date: now,
+                review_id: "42",
                 post_id: 9000,
+                type: ReviewType.SE,
                 user_id: "-1",
                 user_name: "Community"
             });

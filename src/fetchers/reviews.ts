@@ -33,12 +33,12 @@ export default class ReviewFetcher extends Fetcher {
         const reviews = Object.values(history);
 
         for (const review of reviews) {
-            const { post_id, post_type, review_id } = review;
+            const { post_id, post_type } = review;
 
             try {
                 await addPost(db, post_id, post_type);
 
-                await addReview(db, review_id, reviewType, {
+                await addReview(db, {
                     ...review,
                     date: new Date(review.date).getTime() / 1000,
                 });

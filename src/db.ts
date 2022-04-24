@@ -2,6 +2,7 @@ import SQL from "sql-template-strings";
 import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import type { PostType, ReviewType } from "./fetchers/index.js";
+import type { Review } from "./parsers/reviews.js";
 
 export type PostFromDB = {
     id: number,
@@ -132,27 +133,17 @@ export const addPost = (
 /**
  * @summary adds a review into the database
  * @param db database instance
- * @param id id of the review
- * @param type type of the review
  * @param init review information
  */
 export const addReview = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
-    id: string,
-    type: ReviewType,
-    init: {
-        user_id: string,
-        user_name: string,
-        post_id: number,
-        date: number,
-        action: string;
-    }
+    init: Omit<Review, "date" | "post_type"> & { date: number; }
 ) => {
-    const { user_id, user_name, post_id, date, action } = init;
+    const { user_id, user_name, type, post_id, review_id, date, action } = init;
 
     return db.run(SQL`
         INSERT INTO reviews (review_id, review_type, user_id, user_name, post_id, date, review_result) VALUES (
-            ${id},
+            ${review_id},
             ${type},
             ${user_id},
             ${user_name},
