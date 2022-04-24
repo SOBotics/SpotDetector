@@ -21,6 +21,10 @@ export type ReviewFromDB = {
     review_result: string;
 }
 
+/**
+ * @summary opens an SQLite database connection
+ * @param filename path to database file or ':memory:'
+ */
 export const openDatabase = async (filename: string): Promise<
     sqlite.Database<sqlite3.Database, sqlite3.Statement>
 > => {
