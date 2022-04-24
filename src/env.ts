@@ -9,6 +9,7 @@ export interface BotEnvironment {
     REPORT_DAYS: number;
     REPORT_REVIEWS: number;
     REPORT_USER: number;
+    REVIEW_PAGES: number;
     STACKAPPS_POST?: number;
     TENK_EMAIL: string;
     TENK_PASSWORD: string;
@@ -84,7 +85,8 @@ const environment = parseEnv<Partial<BotEnvironment>>(parsed || {});
 const defaulted = defaultAll(environment, {
     STACKAPPS_POST: 8091,
     REPORT_DAYS: 8,
-    REPORT_REVIEWS: 4
+    REPORT_REVIEWS: 4,
+    REVIEW_PAGES: 100
 });
 
 export default defaulted;

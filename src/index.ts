@@ -125,8 +125,10 @@ const main = async () => {
         }
     );
 
+    const { REVIEW_PAGES } = env;
+
     // Fetch timeline, post to bot
-    const rf = new ReviewFetcher(browser, db);
+    const rf = new ReviewFetcher(browser, db, REVIEW_PAGES);
     const pf = new PostFetcher(browser, db);
 
     await rf.scrapeAll();
