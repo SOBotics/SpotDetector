@@ -13,8 +13,8 @@ const STALE_DELETION = 3 * 24 * 60 * 60;
 export default class PostFetcher extends Fetcher {
 
     /**
-     * @summary Perform an update on the posts provided, updating them to deleted/undeleted
-     * @param postIds The post ids to update/search
+     * @summary fetches posts from the SE API
+     * @param postIds post ids to fetch
      */
     async #fetchDeleted(postIds: number[]) {
         const key = env?.API_KEY;
@@ -37,18 +37,18 @@ export default class PostFetcher extends Fetcher {
             json: true
         });
 
-        if (res.backoff) {
-            console.log(`Got backoff, need to wait ${res.backoff} seconds`);
-            await delay(res.backoff * 1000);
-        } else if (res.quota_remaining && res.quota_remaining % 100 === 0) {
-            console.log(`Quota remaining: ${res.quota_remaining}`);
+        const { backoff, quota_remaining } = res;
+
+        if (backoff) {
+            console.log(`Got backoff, need to wait ${backoff} seconds`);
+            await delay(backoff * 1000);
+        } else if (quota_remaining && quota_remaining % 100 === 0) {
+            console.log(`Quota remaining: ${quota_remaining}`);
         }
 
         await delay(250);
 
         const apiPosts = res.items.map(i => i.post_id);
-
-        // console.log(`Chunk completed: ${postIds.length-apiPosts.length} deleted posts found.`);
 
         return postIds.filter(id => !apiPosts.includes(id));
     }
