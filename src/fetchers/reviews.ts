@@ -1,16 +1,26 @@
+import type { Database } from "sqlite";
+import type Browser from "../browser.js";
 import { addPost, addReview, getLatestReview } from '../db.js';
 import { parseReviews, Review } from '../parsers/reviews.js';
 import { delay, isErrno } from '../utils.js';
 import Fetcher, { ReviewType } from './index.js';
 
+
 /// <reference types="node" />
 
 export default class ReviewFetcher extends Fetcher {
 
-    async #scrape(reviewType: ReviewType, page = 1, pages = 1, count = 0): Promise<number> {
+    #pages: number;
+
+    constructor(browser: Browser, db: Database, pages = 1) {
+        super(browser, db);
+        this.#pages = pages;
+    }
+
+    async #scrape(reviewType: ReviewType, page = 1, count = 0): Promise<number> {
         const { browser, db } = this;
 
-        if (page > pages) return count;
+        if (page > this.#pages) return count;
 
         const latestReview: Review | undefined = await getLatestReview(db, reviewType);
 
@@ -43,7 +53,7 @@ export default class ReviewFetcher extends Fetcher {
 
         await delay(2000);
 
-        return this.#scrape(reviewType, ++page, pages, count);
+        return this.#scrape(reviewType, ++page, count);
     }
 
     /**
