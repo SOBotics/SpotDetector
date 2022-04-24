@@ -43,6 +43,28 @@ export const createReviewsTable = async (
 };
 
 /**
+ * @summary creates an index on a given table
+ * @param db database instance
+ * @param table table name to create index on
+ * @param name index name
+ * @param columns columns to index on and order
+ * @param filter index filter
+ */
+export const createIndex = async (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+    table: string,
+    name: string,
+    columns: Record<string, "asc" | "desc">,
+    filter?: string
+): Promise<void> => {
+    return db.exec(`
+        CREATE INDEX IF NOT EXISTS ${name} ON ${table} (
+            ${Object.entries(columns).map(([cname, order]) => `${cname} ${order.toUpperCase()}`, "").join(",\n")}
+        )${filter ? ` WHERE ${filter}` : ""};
+    `);
+};
+
+/**
  * @summary initializes the database
  */
 export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sqlite3.Statement>> => {
@@ -55,24 +77,13 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
     await createPostsTable(db);
     await createReviewsTable(db);
 
-    await db.exec(`
-        CREATE INDEX IF NOT EXISTS idx_post_id ON reviews (
-            post_id	ASC
-        );
-    `);
+    await createIndex(db, "reviews", "idx_post_id", { post_id: "asc" });
+    await createIndex(db, "reviews", "idx_post_deleted_review_result", {
+        post_deleted: "asc",
+        review_result: "asc"
+    });
 
-    await db.exec(`
-        CREATE INDEX IF NOT EXISTS idx_post_deleted_review_result ON reviews (
-            post_deleted	ASC,
-            review_result	ASC
-        );
-    `);
-
-    await db.exec(`
-        CREATE INDEX IF NOT EXISTS idx_post_deleted ON posts (
-            deleted	ASC
-        ) WHERE deleted IS NULL;
-    `);
+    await createIndex(db, "posts", "idx_post_deleted", { deleted: "asc" }, "deleted IS NULL");
 
     return db;
 };
