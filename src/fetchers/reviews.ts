@@ -1,88 +1,49 @@
 import { addPost, addReview, getLatestReview } from '../db.js';
-import { delay, getPostMetadataFromLink, isErrno } from '../utils.js';
+import { parseReviews, Review } from '../parsers/reviews.js';
+import { delay, isErrno } from '../utils.js';
 import Fetcher, { ReviewType } from './index.js';
 
 /// <reference types="node" />
 
-export interface Review {
-    review_id: string | null;
-    user_id: string | null;
-}
-
 export default class ReviewFetcher extends Fetcher {
 
-    async #scrape(reviewType: ReviewType) {
-        let page = 0;
-        let reviewCount = 0;
+    async #scrape(reviewType: ReviewType, page = 1, pages = 1, count = 0): Promise<number> {
+        const { browser, db } = this;
 
-        const latestReview: Review = await getLatestReview(this.db, reviewType) || {
-            review_id: null,
-            user_id: null,
-        };
+        if (page > pages) return count;
 
-        while (true) {
-            page++;
+        const latestReview: Review | undefined = await getLatestReview(db, reviewType);
 
-            // Sanity check!
-            if (page > 3000) {
-                break;
-            }
+        console.log(`[${reviewType}] scraping page ${page}`);
 
-            console.log(`Scraping page ${page} of ${reviewType} queue`);
+        const d = await browser.scrapeHTML(`/review/${reviewType}/history?page=${page}`);
 
-            const d = await this.browser.scrapeHTML(`/review/${reviewType}/history?page=${page}`);
-            const rows = d.querySelectorAll<HTMLTableRowElement>('.history-table tr');
+        const history = parseReviews(d, reviewType, latestReview);
 
-            for (let row of rows) {
-                const { cells } = row;
+        const reviews = Object.values(history);
 
-                const userA = cells[0].querySelector("a");
-                const postA = cells[1].querySelector("a");
-                const reviewA = cells[2].querySelector("a");
-                const dateA = cells[3].querySelector("span");
-                if (!userA || !postA || !reviewA || !dateA) continue;
+        for (const review of reviews) {
+            const { post_id, post_type, review_id } = review;
 
-                const userId = userA.href.split('/')[2];
-                const userName = userA.textContent || "";
+            try {
+                await addPost(db, post_id, post_type);
 
-                const postHref = postA.href;
-
-                const [postId, postType] = getPostMetadataFromLink(postHref);
-
-                const reviewId = reviewA.href.split('/')[3];
-                const reviewAction = reviewA.textContent?.trim() || "";
-
-                const dateString = dateA.title;
-                const dateInt = new Date(dateString).getTime() / 1000;
-
-                try {
-                    await addPost(this.db, postId, postType);
-
-                    await addReview(this.db, reviewId, reviewType, {
-                        userId,
-                        userName,
-                        postId,
-                        dateInt,
-                        reviewAction
-                    });
-                } catch (err) {
-                    if (isErrno(err) && err.code !== 'SQLITE_CONSTRAINT') {
-                        throw err;
-                    }
+                await addReview(db, review_id, reviewType, {
+                    ...review,
+                    date: new Date(review.date).getTime() / 1000,
+                });
+            } catch (err) {
+                if (isErrno(err) && err.code !== 'SQLITE_CONSTRAINT') {
+                    throw err;
                 }
-
-                // We've fetched up to our last review
-                if (reviewId == latestReview.review_id && userId == latestReview.user_id) {
-                    return reviewCount; // We're done here. Got all the reviews we need
-                }
-
-                reviewCount++;
             }
-
-            await delay(2000);
         }
 
-        return reviewCount;
+        count += reviews.length;
+
+        await delay(2000);
+
+        return this.#scrape(reviewType, ++page, pages, count);
     }
 
     /**
