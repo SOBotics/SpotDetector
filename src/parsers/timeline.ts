@@ -279,3 +279,21 @@ export const parseTimeline = (doc: Document): PostTimeline => {
         init
     );
 };
+
+/**
+ * @summary gets the latest timeline event
+ * @param timeline {@link PostTimeline} to lookup
+ * @param type event type
+ */
+export const getLatestTimelineEvent = <T extends "deletions" | "undeletions">(
+    timeline: PostTimeline,
+    type: T
+) => {
+    const record = timeline[type];
+
+    const events = Object.keys(record).map((r) => record[r]);
+    if (!events.length) return;
+
+    const [latestEvent] = events.sort((a, b) => a.date > b.date ? -1 : 1);
+    return latestEvent;
+};

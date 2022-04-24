@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { JSDOM } from "jsdom";
 import { PostType, ReviewType } from "../../src/fetchers/index.js";
 import { parseReviews } from "../../src/parsers/reviews.js";
-import { parseTimeline } from "../../src/parsers/timeline.js";
+import { getLatestTimelineEvent, parseTimeline } from "../../src/parsers/timeline.js";
 
 describe('Review Parsers', () => {
 
@@ -153,4 +153,15 @@ describe("Timeline Parsers", () => {
 
     });
 
+    describe(getLatestTimelineEvent.name, () => {
+        const timeline = parseTimeline(document);
+
+        it('should correctly get the latest event by type', () => {
+            const latestDeletion = getLatestTimelineEvent(timeline, "deletions");
+            expect(latestDeletion?.date).to.equal("2022-04-17 03:36:45Z");
+
+            const latestUndeletion = getLatestTimelineEvent(timeline, "undeletions");
+            expect(latestUndeletion?.date).to.equal("2022-04-17 04:40:12Z");
+        });
+    });
 });
