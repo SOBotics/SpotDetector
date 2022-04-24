@@ -3,6 +3,13 @@ import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import type { PostType, ReviewType } from "./fetchers/index.js";
 
+export type PostFromDB = {
+    id: number,
+    type: PostType,
+    post_deleted: null,
+    post_delete_reason: null;
+};
+
 export const openDatabase = async (filename: string): Promise<
     sqlite.Database<sqlite3.Database, sqlite3.Statement>
 > => {
@@ -175,7 +182,7 @@ export const updatePost = (
  */
 export const getPosts = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>
-): Promise<{ id: number; type: PostType; date: number; }[]> => {
+): Promise<Array<PostFromDB & { date: number; }>> => {
     return db.all(`
         SELECT p.*, r.date
         FROM posts p
