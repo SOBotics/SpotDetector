@@ -21,6 +21,28 @@ export const createPostsTable = async (
 };
 
 /**
+ * @summary creates table for storing reviews
+ * @param db database instance
+ */
+export const createReviewsTable = async (
+    db: sqlite.Database<sqlite3.Database, sqlite3.Statement>,
+): Promise<void> => {
+    return db.exec(`
+        CREATE TABLE IF NOT EXISTS reviews (
+            review_id       INTEGER     NOT NULL,
+            review_type     TEXT        NOT NULL,
+            user_id         INTEGER     NOT NULL,
+            user_name       TEXT        NOT NULL,
+            post_id         INTEGER     NOT NULL,
+            date            INTEGER     NOT NULL,
+            review_result   TEXT        NOT NULL,
+            PRIMARY KEY(review_id, user_id),
+            FOREIGN KEY(post_id) REFERENCES posts(id)
+        );
+    `);
+};
+
+/**
  * @summary initializes the database
  */
 export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sqlite3.Statement>> => {
@@ -31,20 +53,7 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
     });
 
     await createPostsTable(db);
-
-    await db.exec(`
-        CREATE TABLE IF NOT EXISTS reviews (
-            review_id	INTEGER NOT NULL,
-            review_type	TEXT NOT NULL,
-            user_id	INTEGER NOT NULL,
-            user_name	TEXT NOT NULL,
-            post_id	INTEGER NOT NULL,
-            date	INTEGER NOT NULL,
-            review_result	TEXT NOT NULL,
-            PRIMARY KEY(review_id, user_id),
-            FOREIGN KEY(post_id) REFERENCES posts(id)
-        );
-    `);
+    await createReviewsTable(db);
 
     await db.exec(`
         CREATE INDEX IF NOT EXISTS idx_post_id ON reviews (
