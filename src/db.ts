@@ -192,7 +192,7 @@ export const updatePost = (
  */
 export const getPosts = (
     db: sqlite.Database<sqlite3.Database, sqlite3.Statement>
-): Promise<Array<PostFromDB & { date: number; }>> => {
+): Promise<Array<PostFromDB & Pick<ReviewFromDB, "date">>> => {
     return db.all(`
         SELECT p.*, r.date
         FROM posts p
