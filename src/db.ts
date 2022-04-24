@@ -3,6 +3,15 @@ import * as sqlite from "sqlite";
 import sqlite3 from "sqlite3";
 import type { PostType, ReviewType } from "./fetchers/index.js";
 
+export const openDatabase = async (filename: string): Promise<
+    sqlite.Database<sqlite3.Database, sqlite3.Statement>
+> => {
+    return sqlite.open({
+        driver: sqlite3.verbose().Database,
+        filename
+    });
+};
+
 /**
  * @summary creates table for storing posts
  * @param db database instance
@@ -68,11 +77,7 @@ export const createIndex = async (
  * @summary initializes the database
  */
 export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sqlite3.Statement>> => {
-    const db = await sqlite.open({
-        driver: sqlite3.verbose().Database,
-        filename: "./posts.db",
-        mode: sqlite3.OPEN_CREATE
-    });
+    const db = await openDatabase("./posts.db");
 
     await createPostsTable(db);
     await createReviewsTable(db);
