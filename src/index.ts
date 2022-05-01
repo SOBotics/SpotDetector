@@ -21,7 +21,12 @@ const main = async () => {
 
     const db = await dbInit();
     const browser = new Browser();
-    await browser.login(TENK_EMAIL, TENK_PASSWORD);
+
+    const loggedIn = await browser.login(TENK_EMAIL, TENK_PASSWORD);
+    if (!loggedIn) {
+        console.log("[fatal] failed to login to Stack Exchange");
+        return;
+    }
 
     await delay(1000);
 
