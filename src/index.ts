@@ -34,7 +34,12 @@ const main = async () => {
     await ce.login(CHAT_EMAIL, CHAT_PASSWORD);
 
     const room = ce.getRoom(+CHAT_ROOM);
-    await room.join();
+
+    const joinedRoom = await room.join();
+    if (!joinedRoom) {
+        console.log(`[fatal] failed to join room ${CHAT_ROOM}`);
+        return;
+    }
 
     room.only(ChatEventType.USER_MENTIONED);
 
