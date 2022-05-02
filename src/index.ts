@@ -1,6 +1,5 @@
 import Client, { ChatEventType } from "chatexchange";
 import type WebsocketEvent from "chatexchange/dist/WebsocketEvent";
-import cron from "node-cron";
 import os from "os";
 import Browser from "./browser.js";
 import dbInit from "./db.js";
@@ -10,6 +9,7 @@ import ReviewFetcher from "./fetchers/reviews.js";
 import generate from "./reports/index.js";
 import { UserPrivilege, validateUserPrivileges } from "./user.js";
 import { delay, mdURL, safeMatch } from "./utils.js";
+import ReportWatcher from "./watchers/reports.js";
 
 type Command = "alive" | "instance" | "report";
 
@@ -145,23 +145,14 @@ const main = async () => {
         `[ ${stackapps} ] Started on ${os.hostname()}`
     );
 
-    cron.schedule(
-        "0 3 * * 5",
-        async () => {
-            const report = await generate(db, REPORT_DAYS, REPORT_REVIEWS);
-            if (!report) return;
+    const reportWatcher = new ReportWatcher(db, room, {
+        days: REPORT_DAYS,
+        username: reportUsername,
+        reviews: REPORT_REVIEWS,
+        stackapps
+    });
 
-            const { users, url } = report;
-
-            await room.sendMessage(
-                `[ ${stackapps} ] @${reportUsername} Your [${REPORT_DAYS}-day report](${url}) has arrived. ${users} user${users === 1 ? "" : "s"
-                } found matching ${REPORT_REVIEWS} or more possible bad reviews.`
-            );
-        },
-        {
-            timezone: "Etc/UTC"
-        }
-    );
+    await reportWatcher.watch("0 3 * * 5");
 
     if (!missingPrivileges.has(UserPrivilege.TENK_TOOLS)) {
         const { REVIEW_PAGES } = env;
