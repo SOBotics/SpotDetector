@@ -53,6 +53,26 @@ export default class Browser {
     }
 
     /**
+     * @summary gets user id of the currently logged in user
+     */
+    async getLoggedInUserId(): Promise<number | undefined> {
+        const host = this.#host;
+
+        const { request: { uri } } = await this.#request(`${host}/users/current`, {
+            resolveWithFullResponse: true,
+            followRedirect: true
+        });
+
+        const { pathname }: URL = uri;
+
+        // https://regex101.com/r/SqNlXB/2
+        const userIdUnparsed = pathname.replace(/.*?\/users\/(\d+).*$/, "$1");
+        const userId = parseInt(userIdUnparsed);
+
+        return Number.isNaN(userId) ? void 0 : userId;
+    }
+
+    /**
      * @summary scrapes an HTML document
      * @param url URL of the document
      */
