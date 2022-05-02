@@ -146,15 +146,6 @@ const main = async () => {
         `[ ${stackapps} ] Started on ${os.hostname()}`
     );
 
-    const reportWatcher = new ReportWatcher(browser, db, room, {
-        days: REPORT_DAYS,
-        username: reportUsername,
-        reviews: REPORT_REVIEWS,
-        stackapps
-    });
-
-    await reportWatcher.watch("0 3 * * 5");
-
     if (!missingPrivileges.has(UserPrivilege.REVIEW_EDIT)) {
         const seWatcher = new SuggestedEditsWatcher(browser, db, room, {
             key: API_KEY,
@@ -167,12 +158,21 @@ const main = async () => {
     if (!missingPrivileges.has(UserPrivilege.TENK_TOOLS)) {
         const { REVIEW_PAGES } = env;
 
+        const reportWatcher = new ReportWatcher(browser, db, room, {
+            days: REPORT_DAYS,
+            username: reportUsername,
+            reviews: REPORT_REVIEWS,
+            stackapps
+        });
+
         // Fetch timeline, post to bot
         const rf = new ReviewFetcher(browser, db, REVIEW_PAGES);
         const pf = new PostFetcher(browser, db);
 
         await rf.scrapeAll();
         await pf.scrapeAll();
+
+        await reportWatcher.watch("0 3 * * 5");
     }
 
     process.on("SIGTERM", async () => {
