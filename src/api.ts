@@ -75,3 +75,53 @@ export const getPrivileges = async <T extends keyof Privilege>(
     items.forEach((item) => privileges.set(item[keyOn], item));
     return privileges;
 };
+
+/**
+ * {@see https://api.stackexchange.com/docs/users-by-ids}
+ * @param userIds list of {@link User.user_id} to fetch
+ * @param keyOn key to use for the {@link Map}
+ * @param options request configuration
+ */
+export const getUserInfo = async <T extends keyof User>(
+    userIds: number[],
+    keyOn: T,
+    options: GetUserInfoOptions
+): Promise<Map<User[T], User>> => {
+    await delay(state.backoff);
+
+    const { page = 1, site = "stackoverflow", ...rest } = options;
+
+    const url = new URL(`${API_BASE}/${API_VER}/users/${userIds}`);
+    url.search = new URLSearchParams({
+        ...rest,
+        page: page.toString(),
+        pagesize: "100",
+        site
+    }).toString();
+
+    const res: Wrappers.CommonWrapperObject<User> = await request(url.toString(), {
+        gzip: true,
+        json: true
+    });
+
+    const { backoff, has_more, items = [] } = res;
+
+    if (backoff) {
+        state.backoff = backoff * 1e3 + 5;
+        return getUserInfo(userIds, keyOn, options);
+    }
+
+    const users = new Map<User[T], User>();
+
+    if (has_more) {
+        const more = await getUserInfo(userIds, keyOn, {
+            ...options,
+            page: page + 1
+        });
+
+        more.forEach((v, k) => users.set(k, v));
+    }
+
+    items.forEach((item) => users.set(item[keyOn], item));
+    return users;
+};
