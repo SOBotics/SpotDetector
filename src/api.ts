@@ -1,13 +1,23 @@
-import type { Privilege, Wrappers } from "@userscripters/stackexchange-api-types";
+import type { Privilege, User, Wrappers } from "@userscripters/stackexchange-api-types";
 import request from "request-promise-native";
 import { delay } from "./utils.js";
 
-export interface GetPrivilegesOptions {
+export interface CommonGetOptions {
     filter?: string;
     key: string;
+}
+
+export interface CommonPaginatedOptions extends CommonGetOptions {
     page?: number;
+}
+
+export interface CommonPerSiteOptions extends CommonGetOptions {
     site?: string;
 }
+
+export interface GetPrivilegesOptions extends CommonPaginatedOptions, CommonPerSiteOptions { }
+
+export interface GetUserInfoOptions extends CommonPaginatedOptions, CommonPerSiteOptions { }
 
 const state = {
     backoff: 0
