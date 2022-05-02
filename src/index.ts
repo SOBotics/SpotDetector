@@ -28,6 +28,12 @@ const main = async () => {
         return;
     }
 
+    const loggedInUserId = await browser.getLoggedInUserId();
+    if (!loggedInUserId) {
+        console.log("[fatal] failed to get logged in user id");
+        return;
+    }
+
     await delay(1000);
 
     const ce = new Client("stackoverflow.com");
