@@ -10,6 +10,7 @@ import generate from "./reports/index.js";
 import { UserPrivilege, validateUserPrivileges } from "./user.js";
 import { delay, mdURL, safeMatch } from "./utils.js";
 import ReportWatcher from "./watchers/reports.js";
+import SuggestedEditsWatcher from "./watchers/reviews.js";
 
 type Command = "alive" | "instance" | "report";
 
@@ -153,6 +154,15 @@ const main = async () => {
     });
 
     await reportWatcher.watch("0 3 * * 5");
+
+    if (!missingPrivileges.has(UserPrivilege.REVIEW_EDIT)) {
+        const seWatcher = new SuggestedEditsWatcher(browser, db, room, {
+            key: API_KEY,
+            hours: 48
+        });
+
+        await seWatcher.watch("0 */6 * * *", true);
+    }
 
     if (!missingPrivileges.has(UserPrivilege.TENK_TOOLS)) {
         const { REVIEW_PAGES } = env;
