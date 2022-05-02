@@ -9,5 +9,5 @@ export default abstract class Watcher {
         protected room: Room
     ) { }
 
-    abstract watch(cronExpression: string): Promise<void>;
+    abstract watch(cronExpression: string, immediately?: boolean): Promise<void>;
 }
