@@ -165,14 +165,16 @@ const main = async () => {
         }
     );
 
-    const { REVIEW_PAGES } = env;
+    if (missingPrivileges.has(UserPrivilege.TENK_TOOLS)) {
+        const { REVIEW_PAGES } = env;
 
-    // Fetch timeline, post to bot
-    const rf = new ReviewFetcher(browser, db, REVIEW_PAGES);
-    const pf = new PostFetcher(browser, db);
+        // Fetch timeline, post to bot
+        const rf = new ReviewFetcher(browser, db, REVIEW_PAGES);
+        const pf = new PostFetcher(browser, db);
 
-    await rf.scrapeAll();
-    await pf.scrapeAll();
+        await rf.scrapeAll();
+        await pf.scrapeAll();
+    }
 
     process.on("SIGTERM", async () => {
         await room.sendMessage(`[ ${stackapps} ] Shutting down on ${os.hostname()}`);
