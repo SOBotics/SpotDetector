@@ -71,3 +71,9 @@ export const getText = (elem: Element | null | undefined) => elem?.textContent?.
  * @param map map to convert
  */
 export const toValueArr = <T, U>(map: Map<T, U>) => [...map.values()];
+
+/**
+ * @summary extracts number of seconds from a given date
+ * @param date date to get number of seconds for
+ */
+export const getSeconds = (date: string | number | Date) => Math.trunc(new Date(date).valueOf() / 1000);
