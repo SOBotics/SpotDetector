@@ -36,7 +36,8 @@ const main = async () => {
 
     await delay(1000);
 
-    const ce = new Client("stackoverflow.com");
+    // @ts-expect-error
+    const ce: Client = new Client.default("stackoverflow.com");
     await ce.login(CHAT_EMAIL, CHAT_PASSWORD);
 
     const room = ce.getRoom(+CHAT_ROOM);
