@@ -106,7 +106,7 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
     await createPostsTable(db);
     await createReviewsTable(db);
 
-    await createIndex(db, "reviews", "idx_post_id", { id: "asc" });
+    await createIndex(db, "reviews", "idx_post_id", { post_id: "asc" });
     await createIndex(db, "reviews", "idx_post_deleted_review_result", {
         post_deleted: "asc",
         review_result: "asc"
