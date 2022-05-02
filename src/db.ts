@@ -107,8 +107,7 @@ export const initialize = async (): Promise<sqlite.Database<sqlite3.Database, sq
     await createReviewsTable(db);
 
     await createIndex(db, "reviews", "idx_post_id", { post_id: "asc" });
-    await createIndex(db, "reviews", "idx_post_deleted_review_result", {
-        post_deleted: "asc",
+    await createIndex(db, "reviews", "idx_review_result", {
         review_result: "asc"
     });
 
@@ -222,3 +221,5 @@ export const getLatestReview = (
 };
 
 export default initialize;
+
+initialize();
