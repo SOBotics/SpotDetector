@@ -4,7 +4,7 @@ import { getLatestTimelineEvent, parseTimeline } from "../parsers/timeline.js";
 import { delay } from "../utils.js";
 import Fetcher from "./index.js";
 
-const TIMELINE_DELAY = 1500;
+const TIMELINE_DELAY = 2000;
 
 export default class PostFetcher extends Fetcher {
 
