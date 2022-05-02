@@ -47,7 +47,7 @@ export default class Browser {
             return false;
         }
 
-        await this.#post("/users/login", { email, password });
+        await this.post("/users/login", { email, password });
 
         return true;
     }
@@ -112,7 +112,7 @@ export default class Browser {
      * @summary makes a POST request with an fkey
      * @param url URL of the document
      */
-    async #post(url: string, data: Record<string, unknown>): Promise<unknown> {
+    async post(url: string, data: Record<string, unknown>): Promise<unknown> {
         const res = await this.#request(`${this.#host}${url}`, {
             method: 'post',
             form: { ...data, fkey: this.#fkey }
