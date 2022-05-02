@@ -17,6 +17,7 @@ export interface SuggestedEditsWatcherConfig {
 export default class SuggestedEditsWatcher extends Watcher {
 
     #config: SuggestedEditsWatcherConfig;
+    #reported = new Set<number>();
 
     constructor(browser: Browser, db: Database, room: Room, config: SuggestedEditsWatcherConfig) {
         super(browser, db, room);
@@ -45,7 +46,12 @@ export default class SuggestedEditsWatcher extends Watcher {
 
             console.log(`[${ReviewType.SE} watcher] edits found: ${edits.size}`);
 
+            const reported = this.#reported;
             for (const [postId, { comment, post_type, suggested_edit_id }] of edits) {
+                if (reported.has(suggested_edit_id)) {
+                    console.log(`[${ReviewType.SE} watcher] review ${suggested_edit_id} already checked`);
+                    continue;
+                }
 
                 // get the real task id
                 const { href } = await browser.follow(`/suggested-edits/${suggested_edit_id}`);
@@ -55,9 +61,10 @@ export default class SuggestedEditsWatcher extends Watcher {
 
                 const suggestions = Object.values(reviews).filter(({ type }) => type === ReviewType.SE);
 
-                // TODO: make review lookup easier
-                const review = suggestions.find(({ link }) => link.includes(taskId.toString()));
+                const review = suggestions.find(({ link }) => link.includes(taskId));
                 if (!review) continue;
+
+                reported.add(suggested_edit_id);
 
                 const { votes: { approve, reject }, link } = review;
 
