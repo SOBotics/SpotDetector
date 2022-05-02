@@ -65,3 +65,9 @@ export const hasKeySet = <T extends object, U extends keyof T>(obj: T, key: U): 
  * @param elem {@link Element} to get the text of
  */
 export const getText = (elem: Element | null | undefined) => elem?.textContent?.trim() || "";
+
+/**
+ * @summary converts a {@link Map} into an array of values
+ * @param map map to convert
+ */
+export const toValueArr = <T, U>(map: Map<T, U>) => [...map.values()];
