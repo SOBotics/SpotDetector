@@ -28,6 +28,56 @@ const API_VER = 2.3;
 
 /**
  * {@see https://api.stackexchange.com/docs/privileges-on-users}
+ * @param keyOn key to use for the {@link Map}
+ * @param site API slug of the site to get {@link Privilege}s for
+ * @param options request configuration
+ */
+export const getSitePrivileges = async <T extends keyof Privilege>(
+    keyOn: T,
+    site: string,
+    options: Omit<GetPrivilegesOptions, "site">
+): Promise<Map<Privilege[T], Privilege>> => {
+    await delay(state.backoff);
+
+    const { page = 1, ...rest } = options;
+
+    const url = new URL(`${API_BASE}/${API_VER}/privileges`);
+    url.search = new URLSearchParams({
+        ...rest,
+        page: page.toString(),
+        pagesize: "100",
+        site
+    }).toString();
+
+    const res: Wrappers.CommonWrapperObject<Privilege> = await request(url.toString(), {
+        gzip: true,
+        json: true
+    });
+
+    const { backoff, has_more, items = [] } = res;
+
+    if (backoff) {
+        state.backoff = backoff * 1e3 + 5;
+        return getSitePrivileges(keyOn, site, options);
+    }
+
+    const privileges = new Map<Privilege[T], Privilege>();
+
+    if (has_more) {
+        const more = await getSitePrivileges(keyOn, site, {
+            ...options,
+            page: page + 1
+        });
+
+        more.forEach((v, k) => privileges.set(k, v));
+    }
+
+    items.forEach((item) => privileges.set(item[keyOn], item));
+    return privileges;
+};
+
+/**
+ * {@see https://api.stackexchange.com/docs/privileges-on-users}
  * @param userId user id to look up
  * @param keyOn key to use for the {@link Map}
  * @param options request configuration
