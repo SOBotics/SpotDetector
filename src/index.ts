@@ -8,6 +8,7 @@ import env, { BotEnvironment, validateEnv } from "./env.js";
 import PostFetcher from "./fetchers/posts.js";
 import ReviewFetcher from "./fetchers/reviews.js";
 import generate from "./reports/index.js";
+import { UserPrivilege, validateUserPrivileges } from "./user.js";
 import { delay, mdURL, safeMatch } from "./utils.js";
 
 const main = async () => {
@@ -17,9 +18,8 @@ const main = async () => {
     }
 
     // FIXME: why is user-defined guard not narrowing?
-    const { TENK_EMAIL, TENK_PASSWORD, CHAT_EMAIL, CHAT_PASSWORD, CHAT_ROOM, REPORT_USER } = env as Required<BotEnvironment>;
+    const { TENK_EMAIL, TENK_PASSWORD, CHAT_EMAIL, CHAT_PASSWORD, CHAT_ROOM, REPORT_USER, API_KEY } = env as Required<BotEnvironment>;
 
-    const db = await dbInit();
     const browser = new Browser();
 
     const loggedIn = await browser.login(TENK_EMAIL, TENK_PASSWORD);
@@ -48,7 +48,30 @@ const main = async () => {
         return;
     }
 
+    /** TODO: make site configurable (currently not set in {@link Browser}) */
+    const missingPrivileges = await validateUserPrivileges(loggedInUserId, "stackoverflow", API_KEY);
+
+    const relevantPrivileges: UserPrivilege[] = [
+        UserPrivilege.REVIEW_BASE,
+        UserPrivilege.REVIEW_CLOSE,
+        UserPrivilege.REVIEW_EDIT,
+        UserPrivilege.REVIEW_TAGS,
+        UserPrivilege.TENK_TOOLS
+    ];
+
+    const relevantMissingPrivileges = relevantPrivileges.filter(
+        (privilege) => missingPrivileges.has(privilege)
+    );
+
+    if (relevantMissingPrivileges.length) {
+        await room.sendMessage(
+            `[warning] unprivileged report user:\n-${relevantMissingPrivileges.join("\n-")}`
+        );
+    }
+
     room.only(ChatEventType.USER_MENTIONED);
+
+    const db = await dbInit();
 
     room.on("message", async (msg: WebsocketEvent) => {
         const { id: botId } = await ce.getMe();
