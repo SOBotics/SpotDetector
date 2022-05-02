@@ -120,4 +120,13 @@ export default class Browser {
 
         return res;
     }
+
+    /**
+     * @summary resolves a path
+     * @param path path to resolve
+     */
+    resolve(path: string): string {
+        const host = this.#host;
+        return `${host}/${path.replace(/^\//, "")}`;
+    }
 }
