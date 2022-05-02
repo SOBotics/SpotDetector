@@ -1,6 +1,7 @@
 import type Room from "chatexchange/dist/Room";
 import cron from "node-cron";
 import type { Database } from "sqlite";
+import type Browser from "../browser.js";
 import generate from "../reports/index.js";
 import Watcher from "./index.js";
 
@@ -15,8 +16,8 @@ export default class ReportWatcher extends Watcher {
 
     #config: ReportWatcherConfig;
 
-    constructor(db: Database, room: Room, config: ReportWatcherConfig) {
-        super(db, room);
+    constructor(browser: Browser, db: Database, room: Room, config: ReportWatcherConfig) {
+        super(browser, db, room);
 
         this.#config = config;
     }

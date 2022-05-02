@@ -145,7 +145,7 @@ const main = async () => {
         `[ ${stackapps} ] Started on ${os.hostname()}`
     );
 
-    const reportWatcher = new ReportWatcher(db, room, {
+    const reportWatcher = new ReportWatcher(browser, db, room, {
         days: REPORT_DAYS,
         username: reportUsername,
         reviews: REPORT_REVIEWS,
