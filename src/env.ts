@@ -56,6 +56,7 @@ export const parseEnv = <T extends Record<string, unknown>>(env: { [P in keyof T
         if (v === "true") return output[k] = true;
         if (v === "false") return output[k] = false;
         if (!Number.isNaN(+v)) return output[k] = +v;
+        output[k] = v;
     });
 
     return output as any;
