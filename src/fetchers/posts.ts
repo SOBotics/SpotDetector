@@ -1,6 +1,6 @@
 import lodash from "lodash";
 import { getPosts, updatePost } from "../db.js";
-import { getLatestTimelineEvent, parseTimeline } from "../parsers/timeline.js";
+import { getLatestTimelineEvent, parseTimeline, PostTimeline } from "../parsers/timeline.js";
 import { delay } from "../utils.js";
 import Fetcher from "./index.js";
 
@@ -12,7 +12,7 @@ export default class PostFetcher extends Fetcher {
      * @summary scrapes timeline of a given post
      * @param id id of the post to scrape
      */
-    async scrape(id: number): Promise<void> {
+    async scrape(id: number): Promise<PostTimeline> {
         const { browser, db } = this;
 
         console.log(`[${id}] scraping timeline`);
@@ -28,6 +28,7 @@ export default class PostFetcher extends Fetcher {
         await delay(TIMELINE_DELAY);
 
         console.log(`[${id}] finished scraping timeline`);
+        return timeline;
     }
 
     /**
