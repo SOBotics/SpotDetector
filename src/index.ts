@@ -1,5 +1,5 @@
 import Client, { ChatEventType } from "chatexchange";
-import WebsocketEvent from "chatexchange/dist/WebsocketEvent";
+import type WebsocketEvent from "chatexchange/dist/WebsocketEvent";
 import cron from "node-cron";
 import os from "os";
 import Browser from "./browser.js";
@@ -10,6 +10,8 @@ import ReviewFetcher from "./fetchers/reviews.js";
 import generate from "./reports/index.js";
 import { UserPrivilege, validateUserPrivileges } from "./user.js";
 import { delay, mdURL, safeMatch } from "./utils.js";
+
+type Command = "alive" | "instance" | "report";
 
 const main = async () => {
     const valid = validateEnv(env);
@@ -73,6 +75,43 @@ const main = async () => {
 
     const db = await dbInit();
 
+    const commands = new Map<Command, (msg: WebsocketEvent, args: string[]) => Promise<unknown>>();
+    commands.set("alive", (msg) => msg.reply("wuf!"));
+    commands.set("instance", (msg) => msg.reply(`Running ${os.hostname()}`));
+    commands.set("report", async (_, args) => {
+        let days = 30;
+        let reviewThreshold = 5;
+
+        for (const param of args) {
+            const [newDays] = safeMatch(/^(\d+)d$/i, param);
+
+            if (+newDays > 0) {
+                days = +newDays;
+            }
+
+            const [newReviewThreshold] = safeMatch(/^(\d+)$/i, param);
+
+            if (+newReviewThreshold > 0) {
+                reviewThreshold = +newReviewThreshold;
+            }
+        }
+
+        const report = await generate(db, days, reviewThreshold);
+
+        if (report) {
+            await room.sendMessage(
+                `Opened [${days} day report](${report.url}). ${report.users
+                } user${report.users === 1 ? "" : "s"
+                } found matching ${reviewThreshold} or more possible bad reviews.`
+            );
+        } else {
+            await room.sendMessage(
+                `No users matching ${reviewThreshold} or more possible bad reviews, within the last ${days} day${days === 1 ? "" : "s"
+                }.`
+            );
+        }
+    });
+
     room.on("message", async (msg: WebsocketEvent) => {
         const { id: botId } = await ce.getMe();
 
@@ -85,52 +124,11 @@ const main = async () => {
             .split(/ +/)
             .filter(split => !split.startsWith("@"));
 
-        const command = content[0].toLowerCase().trim();
+        const command = content[0].toLowerCase().trim() as Command;
 
         const rest = content.slice(1);
 
-        switch (command) {
-            case "alive":
-                await msg.reply("Yep o/");
-                break;
-            case "instance":
-                await msg.reply(`Running ${os.hostname()}`);
-                break;
-            case "report":
-                let days = 30;
-                let reviewThreshold = 5;
-
-                for (const param of rest) {
-                    const [newDays] = safeMatch(/^(\d+)d$/i, param);
-
-                    if (+newDays > 0) {
-                        days = +newDays;
-                    }
-
-                    const [newReviewThreshold] = safeMatch(/^(\d+)$/i, param);
-
-                    if (+newReviewThreshold > 0) {
-                        reviewThreshold = +newReviewThreshold;
-                    }
-                }
-
-                const report = await generate(db, days, reviewThreshold);
-
-                if (report) {
-                    await room.sendMessage(
-                        `Opened [${days} day report](${report.url}). ${report.users
-                        } user${report.users === 1 ? "" : "s"
-                        } found matching ${reviewThreshold} or more possible bad reviews.`
-                    );
-                } else {
-                    await room.sendMessage(
-                        `No users matching ${reviewThreshold} or more possible bad reviews, within the last ${days} day${days === 1 ? "" : "s"
-                        }.`
-                    );
-                }
-
-                break;
-        }
+        commands.get(command)?.(msg, rest);
     });
 
     await room.watch();
