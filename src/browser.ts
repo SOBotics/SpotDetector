@@ -109,6 +109,20 @@ export default class Browser {
     }
 
     /**
+     * @summary follows a URL to its redirect
+     * @param url url to follow
+     */
+    async follow(url: string): Promise<URL> {
+        const { request: { uri } } = await this.#request(`${this.#host}${url}`, {
+            method: "get",
+            resolveWithFullResponse: true,
+            followRedirect: true
+        });
+
+        return uri;
+    }
+
+    /**
      * @summary makes a POST request with an fkey
      * @param url URL of the document
      */
