@@ -30,7 +30,7 @@
     "dependencies": {
         "chatexchange": "^0.6.5",
         "dotenv": "^16.0.3",
-        "jsdom": "^19.0.0",
+        "jsdom": "^21.0.0",
         "lodash": "^4.17.21",
         "node-cron": "^3.0.2",
         "request": "^2.88.0",
