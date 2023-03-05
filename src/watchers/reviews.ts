@@ -57,6 +57,11 @@ export default class SuggestedEditsWatcher extends Watcher {
                 const { href } = await browser.follow(`/suggested-edits/${suggested_edit_id}`);
                 const [taskId] = /(?<=suggested-edits\/)\d+(?=.*$)/.exec(href) || [];
 
+                if(!taskId) {
+                    console.log(`[${ReviewType.SE} watcher] missing task id: ${href}`)
+                    continue;
+                }
+
                 const { reviews } = await fetcher.scrape(postId);
 
                 const suggestions = Object.values(reviews).filter(({ type }) => type === ReviewType.SE);
