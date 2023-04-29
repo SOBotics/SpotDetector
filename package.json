@@ -40,7 +40,7 @@
         "sqlite3": "^5.1.6"
     },
     "devDependencies": {
-        "@types/chai": "^4.3.4",
+        "@types/chai": "^4.3.5",
         "@types/jsdom": "^16.2.15",
         "@types/lodash": "^4.14.194",
         "@types/mocha": "^9.1.1",
